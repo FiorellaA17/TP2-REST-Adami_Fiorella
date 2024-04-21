@@ -1,5 +1,4 @@
 using Infraestructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Custom
-var connectionString = builder.Configuration["connectionString"];
-builder.Services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddSingleton<StoreDbContext>();
+
 
 
 var app = builder.Build();
