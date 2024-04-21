@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Presentation.Controllers
 {
@@ -7,10 +8,19 @@ namespace Presentation.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetListProduct()
+        private readonly IProductService _productService;
+
+        public ProductsController(IProductService productService)
         {
-            return new JsonResult(new { name = "string" });
+            _productService = productService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListProducts()
+        {
+            var products = await _productService.GetListProducts();
+            return Ok(products);
         }
     }
+
 }

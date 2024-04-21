@@ -1,4 +1,8 @@
+using Application.Interfaces;
+using Application.Models;
+using Application.UseCase;
 using Infraestructure.Persistence;
+using Infraestructure.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,9 @@ builder.Services.AddSwaggerGen();
 
 //Custom
 builder.Services.AddSingleton<StoreDbContext>();
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductQuery, ProductQuery>();
+builder.Services.AddTransient<ProductDto>();
 
 
 
