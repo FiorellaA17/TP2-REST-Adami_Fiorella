@@ -1,6 +1,6 @@
 using Application.Interfaces;
-using Application.Models;
 using Application.UseCase;
+using Infraestructure.Command;
 using Infraestructure.Persistence;
 using Infraestructure.Query;
 
@@ -15,10 +15,9 @@ builder.Services.AddSwaggerGen();
 
 //Custom
 builder.Services.AddSingleton<StoreDbContext>();
-builder.Services.AddTransient<IProductService, ProductService>();
-builder.Services.AddTransient<IProductQuery, ProductQuery>();
-builder.Services.AddTransient<ProductDto>();
-
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductQuery, ProductQuery>();
+builder.Services.AddScoped<IProductCommand, ProductCommand>();
 
 
 var app = builder.Build();

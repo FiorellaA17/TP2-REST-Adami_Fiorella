@@ -3,11 +3,7 @@ using Application.Models;
 using Domain.Entities;
 using Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Infraestructure.Query
 {
@@ -19,24 +15,34 @@ namespace Infraestructure.Query
         {
             _context = Context;
         }
-        public async Task<List<ProductDto>> GetListProducts()
+        public IQueryable<Product> GetListProducts()
         {
-            var products = await _context.Products
-                .Include(p => p.CategoryName)
-                .Select(p => new ProductDto
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    Category = p.Category,
-                    Discount = p.Discount,
-                    CategoryName = p.CategoryName.Name
-                                                      
-                })
-                .ToListAsync();
-
-            return products;
+            return _context.Products.Include(p => p.CategoryName);
         }
+
+        public async Task<Product> GetProductById(Guid id)
+        {
+            var product = _context.Products
+                .Include(p => p.CategoryName)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+            return await product;
+        }
+
+        public async Task<bool> ProductExistsByName(string name)
+        {
+            return await _context.Products.AnyAsync(p => p.Name == name);
+        }
+
+        public async Task<string> GetCategoryNameById(int categoryId)
+        {
+            var category = await _context.Categories.FindAsync(categoryId);
+            if (category != null)
+            {
+                return category.Name;
+            }
+
+            return null;
+        }
+     
     }
 }
