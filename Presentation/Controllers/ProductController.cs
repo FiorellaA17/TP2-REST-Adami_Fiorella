@@ -24,6 +24,24 @@ namespace Presentation.Controllers
             return Ok(products);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
+        {
+            try
+            {
+                var productResponse = await _productService.CreateProduct(request);
+                return CreatedAtRoute(new { id = productResponse.Id }, productResponse);
+            }
+            catch (ProductAlreadyExistsException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error" + ex);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
@@ -39,25 +57,6 @@ namespace Presentation.Controllers
             }
 
             return Ok(productDetails);
-        }
-
-
-        [HttpPost("products")]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
-        {
-            try
-            {
-                var productResponse = await _productService.CreateProduct(productDto);
-                return CreatedAtRoute(new { id = productResponse.ProductId }, productResponse);
-            }
-            catch (ProductAlreadyExistsException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal Server Error");
-            }
-        }
+        }      
     }
 }

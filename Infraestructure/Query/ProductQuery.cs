@@ -1,9 +1,8 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using Domain.Entities;
 using Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+
 
 namespace Infraestructure.Query
 {
@@ -36,13 +35,9 @@ namespace Infraestructure.Query
         public async Task<string> GetCategoryNameById(int categoryId)
         {
             var category = await _context.Categories.FindAsync(categoryId);
-            if (category != null)
-            {
-                return category.Name;
-            }
 
-            return null;
+            return category.Name;
         }
-     
+
     }
 }

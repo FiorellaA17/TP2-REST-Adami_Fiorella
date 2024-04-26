@@ -17,40 +17,39 @@ namespace Application.UseCase
             _productCommand = productCommand;
         }
 
-        public async Task<ProductResponse> CreateProduct(CreateProductDto productDto)
+        public async Task<ProductResponse> CreateProduct(ProductRequest request)
         {
-            if (await _productQuery.ProductExistsByName(productDto.Name))
+            if (await _productQuery.ProductExistsByName(request.Name))
             {
-                throw new ProductAlreadyExistsException(productDto.Name);
+                throw new ProductAlreadyExistsException(request.Name);
             }
             try
             {
-                var productId = Guid.NewGuid();
                 var product = new Product
                 {
-                    ProductId = productId,
-                    Name = productDto.Name,
-                    Description = productDto.Description,
-                    Price = productDto.Price,
-                    Category = productDto.Category,
-                    Discount = productDto.Discount,
-                    ImageUrl = productDto.ImageUrl
+                    ProductId = Guid.NewGuid(),
+                    Name = request.Name,
+                    Description = request.Description,
+                    Price = request.Price,
+                    Category = request.Category,
+                    Discount = request.Discount,
+                    ImageUrl = request.ImageUrl
                 };
                 await _productCommand.AddProduct(product);
 
                 return new ProductResponse
                 {
-                    ProductId = productId,
-                    Name = productDto.Name,
-                    Description = productDto.Description,
-                    Price = productDto.Price,
-                    Discount = productDto.Discount,
-                    //Category = productDto.Category,
-                    ImageUrl = productDto.ImageUrl,
-                    Category = new ProductCategoryResponse
+                    Id = product.ProductId.ToString(),
+                    Name = request.Name,
+                    Description = request.Description,
+                    Price = request.Price,
+                    Discount = request.Discount,
+                    ImageUrl = request.ImageUrl,
+                    Category = new ProductCategory
                     {
-                        Name = await _productQuery.GetCategoryNameById(productDto.Category),
-                    },
+                        Id = request.Category,
+                        Name = await _productQuery.GetCategoryNameById(request.Category),
+                    }
                 };
             }
 
@@ -65,15 +64,15 @@ namespace Application.UseCase
 
             var query = _productQuery.GetListProducts();
             // Aplica filtro por categoría si Categories no es nulo y tiene elementos.
-            if (filter.CategoryIds != null && filter.CategoryIds.Any())
+            if (filter.Categories != null && filter.Categories.Any())
             {
-                query = query.Where(p => filter.CategoryIds.Contains(p.CategoryName.CategoryId));
+                query = query.Where(p => filter.Categories.Contains(p.CategoryName.CategoryId));
             }
 
             // Aplica filtro por nombre solo si se proporciona un nombre.
-            if (!string.IsNullOrEmpty(filter.NameFilter))
+            if (!string.IsNullOrEmpty(filter.Name))
             {
-                query = query.Where(p => p.Name.Contains(filter.NameFilter));
+                query = query.Where(p => p.Name.Contains(filter.Name));
             }
             var products = await query
             .Skip(filter.Offset)
@@ -85,29 +84,12 @@ namespace Application.UseCase
                 Price = p.Price,
                 Discount = p.Discount,
                 ImageUrl = p.ImageUrl,
-                CategoryName = p.CategoryName.Name
+                CategoryName = p.Category
             }).ToListAsync();
 
             return products;
-
-            //query = query.Skip(filter.Offset).Take(filter.Limit);
-
-            //var products = await query.ToListAsync();
-            //return products.Select(MapToProductGetResponse);
         }
 
-        //private ProductGetResponse MapToProductGetResponse(Product product)
-        //{
-        //    return new ProductGetResponse
-        //    {
-        //        Id = product.ProductId.ToString(),
-        //        Name = product.Name,
-        //        Price = product.Price,
-        //        Discount = product.Discount,
-        //        ImageUrl = product.ImageUrl,
-        //        CategoryName = product.CategoryName.Name 
-        //    };
-        //}
         public async Task<ProductDto> GetProductById(Guid productId)
         {
             var product = await _productQuery.GetProductById(productId);
