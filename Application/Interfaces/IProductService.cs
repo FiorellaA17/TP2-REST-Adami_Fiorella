@@ -6,6 +6,9 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<ProductGetResponse>> GetFilteredProducts(ProductFilter filter);
         Task<ProductResponse> CreateProduct(ProductRequest request);
-        Task<ProductDto> GetProductById(Guid productId);
+        Task<ProductResponse> GetProductById(Guid productId);
+        Task<ProductResponse> UpdateProduct(Guid id, ProductRequest request);
+        //Task<bool> ProductExistsByName(string name);
+        Task<ProductResponse> DeleteProduct(Guid productId);
     }
 }

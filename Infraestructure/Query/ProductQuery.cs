@@ -35,6 +35,10 @@ namespace Infraestructure.Query
         public async Task<string> GetCategoryNameById(int categoryId)
         {
             var category = await _context.Categories.FindAsync(categoryId);
+            if (category == null)
+            {
+                return "Categoria no encontrada."; 
+            }
 
             return category.Name;
         }

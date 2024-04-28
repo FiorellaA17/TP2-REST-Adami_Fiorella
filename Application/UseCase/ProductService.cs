@@ -59,6 +59,33 @@ namespace Application.UseCase
                 throw;
             }
         }
+
+        public async Task<ProductResponse> DeleteProduct(Guid productId)
+        {
+            var product = await _productQuery.GetProductById(productId);
+            if (product == null)
+            {
+                throw new ProductNotFoundException(productId);
+            }
+
+            await _productCommand.DeleteProduct(product);
+
+            return new ProductResponse
+            {
+                Id = product.ProductId.ToString(),
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Discount = product.Discount,
+                ImageUrl = product.ImageUrl,
+                Category = new ProductCategory
+                {
+                    Id = product.Category,
+                    Name = await _productQuery.GetCategoryNameById(product.Category),
+                }
+            };
+        }
+
         public async Task<IEnumerable<ProductGetResponse>> GetFilteredProducts(ProductFilter filter)
         {
 
@@ -90,41 +117,69 @@ namespace Application.UseCase
             return products;
         }
 
-        public async Task<ProductDto> GetProductById(Guid productId)
+        public async Task<ProductResponse> GetProductById(Guid productId)
         {
             var product = await _productQuery.GetProductById(productId);
-            //return new ProductDto { ProductId = productId,
-            //};
-            //return new ProductResponse
-            //{
-            //    Category = new ProductCategoryResponse
-            //    {
-            //        Name = product.CategoryName.Name,
-            //    },
-            //    Description = product.Description,
-            //    Price = product.Price,
-            //    Name = product.Name,
-            //    ProductId = product.ProductId,
-            //    Discount = product.Discount,
-            //};
-            return MapProductEntityToDto(product);
-        }
-
-        private ProductDto MapProductEntityToDto(Product productEntity)
-        {
-            return new ProductDto
+            if (product == null)
             {
-                ProductId = productEntity.ProductId,
-                Name = productEntity.Name,
-                Description = productEntity.Description,
-                Price = productEntity.Price,
-                Category = productEntity.Category,
-                Discount = productEntity.Discount,
-                ImageUrl = productEntity.ImageUrl,
+                return null;
+            }
+
+                return new ProductResponse
+            {
+                Id = product.ProductId.ToString(),
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Discount = product.Discount,
+                ImageUrl = product.ImageUrl,
+                Category = new ProductCategory
+                {
+                    Id = product.Category,
+                    Name = await _productQuery.GetCategoryNameById(product.Category),
+                }
             };
         }
 
-        
+        public async Task<ProductResponse> UpdateProduct(Guid id, ProductRequest request)
+        {
+            var product = await _productQuery.GetProductById(id);
+
+            // Verifica si el nombre del producto ha cambiado y si el nuevo nombre ya existe.
+            if (product.Name != request.Name && await _productQuery.ProductExistsByName(request.Name))
+            {
+                throw new ProductAlreadyExistsException(request.Name);
+            }
+
+            product.Name = request.Name;
+            product.Description = request.Description;
+            product.Price = request.Price;
+            product.Discount = request.Discount;
+            product.ImageUrl = request.ImageUrl;
+            product.Category = request.Category;
+
+            await _productCommand.UpdateProduct(product);
+
+            return new ProductResponse
+            {
+                Id = product.ProductId.ToString(),
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Discount = product.Discount,
+                ImageUrl = product.ImageUrl,
+                Category = new ProductCategory
+                {
+                    Id = product.Category,
+                    Name = await _productQuery.GetCategoryNameById(product.Category)
+                }
+            };
+
+        }
+        //Task<bool> IProductService.ProductExistsByName(string name)
+        //{
+        //    return _productQuery.ProductExistsByName(name);
+        //}
     }
 
 
