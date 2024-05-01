@@ -18,6 +18,12 @@ builder.Services.AddSingleton<StoreDbContext>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductQuery, ProductQuery>();
 builder.Services.AddScoped<IProductCommand, ProductCommand>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
+builder.Services.AddScoped<ISaleService, SaleService>();
+builder.Services.AddScoped<ISaleQuery, SaleQuery>();
+builder.Services.AddScoped<ISaleCommand, SaleCommand>();
+
 
 
 var app = builder.Build();

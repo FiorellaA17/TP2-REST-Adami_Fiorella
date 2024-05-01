@@ -4,10 +4,10 @@ namespace Application.Models
 {
     public class ApiError
     {
-        public string Message { get; set; }
+        public string message { get; set; }
         public ApiError(string message)
         {
-            Message = message;
+            message = message;
         }
     }
 }

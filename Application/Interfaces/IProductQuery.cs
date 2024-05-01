@@ -7,6 +7,5 @@ namespace Application.Interfaces
         IQueryable<Product> GetListProducts();
         Task<Product> GetProductById(Guid id);
         Task<bool> ProductExistsByName(string name);
-        Task<string> GetCategoryNameById(int categoryId);
     }
 }

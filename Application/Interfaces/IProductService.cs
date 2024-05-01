@@ -8,7 +8,6 @@ namespace Application.Interfaces
         Task<ProductResponse> CreateProduct(ProductRequest request);
         Task<ProductResponse> GetProductById(Guid productId);
         Task<ProductResponse> UpdateProduct(Guid id, ProductRequest request);
-        //Task<bool> ProductExistsByName(string name);
         Task<ProductResponse> DeleteProduct(Guid productId);
     }
 }

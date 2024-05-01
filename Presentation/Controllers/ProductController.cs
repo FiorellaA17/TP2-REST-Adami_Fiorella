@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Models;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 
 namespace Presentation.Controllers
@@ -17,11 +18,36 @@ namespace Presentation.Controllers
             _productService = productService;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> GetProducts([FromQuery] ProductFilter filter)
+        //{
+        //    var products = await _productService.GetFilteredProducts(filter);
+        //    return Ok(products);
+        //}
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Obtiene una lista de productos.",
+            Description = "Recuperar una lista de productos disponibles, con opciones de filtrado."
+        )]
+        [SwaggerResponse(200, Description = "Éxito al recuperar los productos.", Type = typeof(IEnumerable<ProductGetResponse>))]
+        [SwaggerResponse(400, Description = "Parámetros de solicitud inválidos")]
+        [SwaggerResponse(500, Description = "Error interno del servidor")]
         public async Task<IActionResult> GetProducts([FromQuery] ProductFilter filter)
         {
-            var products = await _productService.GetFilteredProducts(filter);
-            return Ok(products);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Devuelve un 400 con los detalles del error de validación
+            }
+
+            try
+            {
+                var products = await _productService.GetFilteredProducts(filter);
+                return Ok(products); //200
+            }
+            catch (Exception) // Captura excepciones generales
+            {
+                return StatusCode(500, "Internal server error "); // Devuelve un 500 en caso de error no manejado
+            }
         }
 
         [HttpPost]
@@ -37,7 +63,7 @@ namespace Presentation.Controllers
             try
             {
                 var productResponse = await _productService.CreateProduct(request);
-                return CreatedAtRoute(new { id = productResponse.Id }, productResponse); // 201 Created
+                return CreatedAtRoute(new { id = productResponse.id }, productResponse); // 201 Created
             }
             catch (ProductAlreadyExistsException)
             {

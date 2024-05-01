@@ -10,52 +10,40 @@ namespace Application.UseCase
     {
         private readonly IProductQuery _productQuery;
         private readonly IProductCommand _productCommand;
+        private readonly ICategoryService _categoryService;
 
-        public ProductService(IProductQuery productQuery, IProductCommand productCommand)
+        public ProductService(IProductQuery productQuery, IProductCommand productCommand, ICategoryService categoryService)
         {
             _productQuery = productQuery;
             _productCommand = productCommand;
+            _categoryService = categoryService;
         }
 
         public async Task<ProductResponse> CreateProduct(ProductRequest request)
         {
-            if (await _productQuery.ProductExistsByName(request.Name))
+            if (await _productQuery.ProductExistsByName(request.name))
             {
-                throw new ProductAlreadyExistsException(request.Name);
+                throw new ProductAlreadyExistsException(request.name);
             }
             try
             {
                 var product = new Product
                 {
                     ProductId = Guid.NewGuid(),
-                    Name = request.Name,
-                    Description = request.Description,
-                    Price = request.Price,
-                    Category = request.Category,
-                    Discount = request.Discount,
-                    ImageUrl = request.ImageUrl
+                    Name = request.name,
+                    Description = request.description,
+                    Price = request.price,
+                    Category = request.category,
+                    Discount = request.discount,
+                    ImageUrl = request.imageUrl
                 };
                 await _productCommand.AddProduct(product);
-
-                return new ProductResponse
-                {
-                    Id = product.ProductId.ToString(),
-                    Name = request.Name,
-                    Description = request.Description,
-                    Price = request.Price,
-                    Discount = request.Discount,
-                    ImageUrl = request.ImageUrl,
-                    Category = new ProductCategory
-                    {
-                        Id = request.Category,
-                        Name = await _productQuery.GetCategoryNameById(request.Category),
-                    }
-                };
+                return await BuildProductResponse(product);
             }
 
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating product: {ex.Message}");
+                Console.WriteLine($"Error creando el producto: {ex.Message}");
                 throw;
             }
         }
@@ -69,21 +57,24 @@ namespace Application.UseCase
             }
 
             await _productCommand.DeleteProduct(product);
+            return await BuildProductResponse(product);
 
-            return new ProductResponse
-            {
-                Id = product.ProductId.ToString(),
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                Discount = product.Discount,
-                ImageUrl = product.ImageUrl,
-                Category = new ProductCategory
-                {
-                    Id = product.Category,
-                    Name = await _productQuery.GetCategoryNameById(product.Category),
-                }
-            };
+            //return new ProductResponse
+            //{
+            //    Id = product.ProductId.ToString(),
+            //    Name = product.Name,
+            //    Description = product.Description,
+            //    Price = product.Price,
+            //    Discount = product.Discount,
+            //    ImageUrl = product.ImageUrl,
+            //    Category = await _categoryService.GetProductCategory(product.Category)
+            //    //Category = new ProductCategory
+            //    //{
+            //    //    Id = product.Category,
+            //    //    //Name = product.CategoryName.Name
+            //    //    Name = await _productQuery.GetCategoryNameById(product.Category),
+            //    //}
+            //};
         }
 
         public async Task<IEnumerable<ProductGetResponse>> GetFilteredProducts(ProductFilter filter)
@@ -91,27 +82,27 @@ namespace Application.UseCase
 
             var query = _productQuery.GetListProducts();
             // Aplica filtro por categoría si Categories no es nulo y tiene elementos.
-            if (filter.Categories != null && filter.Categories.Any())
+            if (filter.categories != null && filter.categories.Any())
             {
-                query = query.Where(p => filter.Categories.Contains(p.CategoryName.CategoryId));
+                query = query.Where(p => filter.categories.Contains(p.CategoryName.CategoryId));
             }
 
             // Aplica filtro por nombre solo si se proporciona un nombre.
-            if (!string.IsNullOrEmpty(filter.Name))
+            if (!string.IsNullOrEmpty(filter.name))
             {
-                query = query.Where(p => p.Name.Contains(filter.Name));
+                query = query.Where(p => p.Name.Contains(filter.name));
             }
             var products = await query
-            .Skip(filter.Offset)
-            .Take(filter.Limit)
+            .Skip(filter.offset)
+            .Take(filter.limit)
             .Select(p => new ProductGetResponse
             {
-                Id = p.ProductId.ToString(),
-                Name = p.Name,
-                Price = p.Price,
-                Discount = p.Discount,
-                ImageUrl = p.ImageUrl,
-                CategoryName = p.Category
+                id = p.ProductId.ToString(),
+                name = p.Name,
+                price = p.Price,
+                discount = p.Discount,
+                imageUrl = p.ImageUrl,
+                categoryName = p.Category
             }).ToListAsync();
 
             return products;
@@ -124,21 +115,7 @@ namespace Application.UseCase
             {
                 return null;
             }
-
-                return new ProductResponse
-            {
-                Id = product.ProductId.ToString(),
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                Discount = product.Discount,
-                ImageUrl = product.ImageUrl,
-                Category = new ProductCategory
-                {
-                    Id = product.Category,
-                    Name = await _productQuery.GetCategoryNameById(product.Category),
-                }
-            };
+            return await BuildProductResponse(product);
         }
 
         public async Task<ProductResponse> UpdateProduct(Guid id, ProductRequest request)
@@ -146,40 +123,35 @@ namespace Application.UseCase
             var product = await _productQuery.GetProductById(id);
 
             // Verifica si el nombre del producto ha cambiado y si el nuevo nombre ya existe.
-            if (product.Name != request.Name && await _productQuery.ProductExistsByName(request.Name))
+            if (product.Name != request.name && await _productQuery.ProductExistsByName(request.name))
             {
-                throw new ProductAlreadyExistsException(request.Name);
+                throw new ProductAlreadyExistsException(request.name);
             }
 
-            product.Name = request.Name;
-            product.Description = request.Description;
-            product.Price = request.Price;
-            product.Discount = request.Discount;
-            product.ImageUrl = request.ImageUrl;
-            product.Category = request.Category;
+            product.Name = request.name;
+            product.Description = request.description;
+            product.Price = request.price;
+            product.Discount = request.discount;
+            product.ImageUrl = request.imageUrl;
+            product.Category = request.category;
 
             await _productCommand.UpdateProduct(product);
+            return await BuildProductResponse(product);
+        }
 
+        private async Task<ProductResponse> BuildProductResponse(Product product)
+        {
             return new ProductResponse
             {
-                Id = product.ProductId.ToString(),
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                Discount = product.Discount,
-                ImageUrl = product.ImageUrl,
-                Category = new ProductCategory
-                {
-                    Id = product.Category,
-                    Name = await _productQuery.GetCategoryNameById(product.Category)
-                }
+                id = product.ProductId.ToString(),
+                name = product.Name,
+                description = product.Description,
+                price = product.Price,
+                discount = product.Discount,
+                imageUrl = product.ImageUrl,
+                category = await _categoryService.GetProductCategory(product.Category)
             };
-
         }
-        //Task<bool> IProductService.ProductExistsByName(string name)
-        //{
-        //    return _productQuery.ProductExistsByName(name);
-        //}
     }
 
 

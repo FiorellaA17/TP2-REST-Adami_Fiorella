@@ -3,22 +3,11 @@ namespace Application.Models
 {
     public class ProductGetResponse
     {
-        //public String Id { get; set; }
-        //public string Name { get; set; }
-        //public decimal Price { get; set; }
-        //public int Discount { get; set; }
-        //public string ImageUrl { get; set; }
-        //public string CategoryName { get; set; }
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-
-        public decimal Price { get; set; }
-
-        public int Discount { get; set; }
-
-        public string? ImageUrl { get; set; }
-
-        public int CategoryName { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public decimal price { get; set; }
+        public int discount { get; set; }
+        public string? imageUrl { get; set; }
+        public int categoryName { get; set; }
     }
 }
