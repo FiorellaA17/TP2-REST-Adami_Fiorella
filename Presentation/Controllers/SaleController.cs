@@ -50,5 +50,16 @@ namespace Presentation.Controllers
                 return StatusCode(500, "Internal Server Error");  // Devuelve el código de estado 500
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSale(int id)
+        {
+            var sale = await _saleService.GetSaleById(id);
+            if (sale == null)
+            {
+                return NotFound(new ApiError("Sale not found"));
+            }
+            return Ok(sale);
+        }
     }
 }

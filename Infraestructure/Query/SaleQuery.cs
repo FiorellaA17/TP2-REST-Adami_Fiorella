@@ -14,21 +14,19 @@ namespace Infraestructure.Query
             _context = context;
         }
 
-        public async Task<IEnumerable<Sale>> GetSales(DateTime? from, DateTime? to)
+        public async Task<IEnumerable<Sale>> GetSalesFromTo(DateTime? from, DateTime? to)
         {
-            //var query = _context.Sales.AsQueryable();
-
-            //if (from.HasValue)
-            //    query = query.Where(s => s.Date >= from.Value);
-
-            //if (to.HasValue)
-            //    query = query.Where(s => s.Date <= to.Value);
-
-            //return await query.Include(s => s.SaleProducts).ToListAsync();
             return await _context.Sales
                           .Include(s => s.SaleProducts)
                           .Where(s => (!from.HasValue || s.Date >= from) && (!to.HasValue || s.Date <= to))
                           .ToListAsync();
+        }
+
+        public async Task<Sale> GetSaleById(int id)
+        {
+            return await _context.Sales
+                .Include(s => s.SaleProducts)
+                .FirstOrDefaultAsync(s => s.SaleId == id);
         }
     }
 }

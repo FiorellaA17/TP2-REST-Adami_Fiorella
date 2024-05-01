@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace Application.UseCase
 {
@@ -50,31 +51,44 @@ namespace Application.UseCase
 
         public async Task<ProductResponse> DeleteProduct(Guid productId)
         {
+            //        var product = await _productQuery.GetProductById(productId);
+            //if (product == null)
+            //{
+            //    throw new ProductNotFoundException($"Product with ID {productId} not found.");
+            //}
+            //if (product.SaleProducts.Any())
+            //{
+            //    throw new CheckProductDeletionException($"Cannot delete product {productId} because it has been sold.");
+            //}
+
+            //await _productCommand.DeleteProduct(product);
+            //return await BuildProductResponse(product);
             var product = await _productQuery.GetProductById(productId);
+
             if (product == null)
             {
                 throw new ProductNotFoundException(productId);
             }
 
+            if (product.SaleProducts.Any())
+            {
+                throw new CheckProductDeletionException(productId);
+            }
+
             await _productCommand.DeleteProduct(product);
             return await BuildProductResponse(product);
+            //var product = await _productQuery.GetProductById(productId);
 
-            //return new ProductResponse
+            //if (product == null)
             //{
-            //    Id = product.ProductId.ToString(),
-            //    Name = product.Name,
-            //    Description = product.Description,
-            //    Price = product.Price,
-            //    Discount = product.Discount,
-            //    ImageUrl = product.ImageUrl,
-            //    Category = await _categoryService.GetProductCategory(product.Category)
-            //    //Category = new ProductCategory
-            //    //{
-            //    //    Id = product.Category,
-            //    //    //Name = product.CategoryName.Name
-            //    //    Name = await _productQuery.GetCategoryNameById(product.Category),
-            //    //}
-            //};
+            //    throw new ProductNotFoundException(productId);
+            //}
+            //if (product)
+            //{
+            //    throw new CheckProductDeletionException(productId);
+            //}
+            //await _productCommand.DeleteProduct(product);
+            //return await BuildProductResponse(product);
         }
 
         public async Task<IEnumerable<ProductGetResponse>> GetFilteredProducts(ProductFilter filter)

@@ -1,5 +1,4 @@
-﻿u
-
+﻿
 namespace Application.Models
 {
     public class SaleRequest

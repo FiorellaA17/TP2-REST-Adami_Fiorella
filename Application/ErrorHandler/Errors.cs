@@ -14,5 +14,20 @@ namespace Application.ErrorHandler
             : base($"Producto con el ID {productId} no se encontró.")
         {
         }
+        //public ProductNotFoundException(string ex)
+        //   : base(ex)
+        //{
+        //}
+    }
+    public class CheckProductDeletionException : Exception
+    {
+        public CheckProductDeletionException(Guid productId)
+            : base($"Se intentó eliminar un producto con historial de ventas con ID: {productId}.")
+        {
+        }
+        //public CheckProductDeletionException(string ex)
+        //    : base(ex)
+        //{
+        //}
     }
 }

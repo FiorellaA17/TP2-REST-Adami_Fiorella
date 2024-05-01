@@ -18,12 +18,6 @@ namespace Presentation.Controllers
             _productService = productService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetProducts([FromQuery] ProductFilter filter)
-        //{
-        //    var products = await _productService.GetFilteredProducts(filter);
-        //    return Ok(products);
-        //}
         [HttpGet]
         [SwaggerOperation(
             Summary = "Obtiene una lista de productos.",
@@ -129,16 +123,69 @@ namespace Presentation.Controllers
             try
             {
                 var response = await _productService.DeleteProduct(id);
-                return Ok(response);
+                return Ok(response);  // Return the response with 200 OK if the deletion is successful
             }
             catch (ProductNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message));
+                return NotFound(new ApiError(ex.Message));  // Return 404 Not Found if the product does not exist
             }
-            catch (Exception)
+            catch (CheckProductDeletionException ex)
             {
-                return StatusCode(500,new ApiError("Ocurrió un error al intentar eliminar el producto."));
+                return BadRequest(new ApiError(ex.Message));  // Return 400 Bad Request if the product cannot be deleted due to existing sales
             }
+            catch (Exception ex)
+            {
+                // For general exceptions that are not handled above
+                return StatusCode(500, new ApiError("An internal error occurred while attempting to delete the product. " + ex.Message));  // Return 500 Internal Server Error for any other exceptions
+            }
+            //try
+            //{
+            //    var response = await _productService.DeleteProduct(id);
+            //    return Ok(response);
+            //}
+            //catch (ProductNotFoundException ex)
+            //{
+            //    return NotFound(new ApiError(ex.Message));
+            //}
+            //catch (CheckProductDeletionException ex)
+            //{
+            //    return StatusCode(500, new ApiError(ex.Message));
+            //}
+            ////try
+            ////{
+            ////    var response = await _productService.DeleteProduct(id);
+            ////    return Ok(response);
+            ////}
+            ////catch (ProductNotFoundException ex)
+            ////{
+            ////    return NotFound(new ApiError(ex.Message));
+            ////}
+            ////catch (CheckProductDeletionException ex)
+            ////{
+            ////    return BadRequest(new ApiError(ex.Message));
+            ////}
+            ////catch (Exception ex)
+            ////{
+            ////    return StatusCode(500, new ApiError("Ocurrió un error interno al intentar eliminar el producto."));
+            ////}
+            //try
+            //{
+            //    var response = await _productService.DeleteProduct(id);
+            //    return Ok(response);  // Producto eliminado con éxito
+            //}
+            //catch (ProductNotFoundException ex)
+            //{
+            //    return NotFound(new ApiError($"Producto con el ID {id} no se encontró."));
+            //}
+            //catch (CheckProductDeletionException ex)
+            //{
+            //    return BadRequest(new ApiError($"No se puede eliminar el producto con ID {id} porque ha sido vendido."));
+            //}
+            //catch (Exception)
+            //{
+            //    // Manejar cualquier otra excepción no anticipada
+            //    return StatusCode(500, new ApiError("Ocurrió un error interno al intentar eliminar el producto."));
+            //}
         }
     }
 }

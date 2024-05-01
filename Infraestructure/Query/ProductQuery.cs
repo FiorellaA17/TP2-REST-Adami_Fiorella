@@ -23,6 +23,7 @@ namespace Infraestructure.Query
         {
             var product = _context.Products
                 .Include(p => p.CategoryName)
+                .Include(p => p.SaleProducts)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
             return await product;
         }

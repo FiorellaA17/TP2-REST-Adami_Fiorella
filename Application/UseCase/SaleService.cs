@@ -89,9 +89,21 @@ namespace Application.UseCase
             };
         }
 
+        public async Task<SaleResponse> GetSaleById(int id)
+        {
+            var sale = await _saleQuery.GetSaleById(id);
+            if (sale == null)
+            {
+                //_logger.LogError("Sale with id {SaleId} not found", id);
+                return null;
+            }
+
+            return await BuildSaleResponse(sale);
+        }
+
         public async Task<IEnumerable<SaleGetResponse>> GetSales(DateTime? from, DateTime? to)
         {
-            var sales = await _saleQuery.GetSales(from, to);
+            var sales = await _saleQuery.GetSalesFromTo(from, to);
             return sales.Select(s => new SaleGetResponse
             {
                 id = s.SaleId,
@@ -99,6 +111,28 @@ namespace Application.UseCase
                 totalQuantity = s.SaleProducts.Sum(sp => sp.Quantity),
                 date = s.Date
             });
+        }
+
+        private async Task<SaleResponse> BuildSaleResponse(Sale sale)
+        {
+            return new SaleResponse
+            {
+                id = sale.SaleId,
+                totalPay = sale.TotalPay,
+                totalQuantity = sale.SaleProducts.Sum(sp => sp.Quantity),
+                subtotal = sale.Subtotal,
+                totalDiscount = sale.TotalDiscount,
+                taxes = sale.Taxes,
+                date = sale.Date,
+                products = sale.SaleProducts.Select(sp => new SaleProductResponse
+                {
+                    id = sp.ShoppingCartId,
+                    productId = sp.Product.ToString(),
+                    quantity = sp.Quantity,
+                    price = sp.Price,
+                    discount = sp.Discount
+                }).ToList()
+            };
         }
     }
 }

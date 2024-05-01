@@ -5,9 +5,9 @@ namespace Application.Models
     public class ApiError
     {
         public string message { get; set; }
-        public ApiError(string message)
+        public ApiError(string Message)
         {
-            message = message;
+            message = Message;
         }
     }
 }

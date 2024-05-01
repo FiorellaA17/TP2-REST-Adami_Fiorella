@@ -4,6 +4,7 @@ namespace Application.Interfaces
 {
     public interface ISaleQuery
     {
-        Task<IEnumerable<Sale>> GetSales(DateTime? from, DateTime? to);
+        Task<IEnumerable<Sale>> GetSalesFromTo(DateTime? from, DateTime? to);
+        Task<Sale> GetSaleById(int id);
     }
 }
