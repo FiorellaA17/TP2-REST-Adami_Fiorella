@@ -4,7 +4,7 @@ namespace Application.Models
 {
     public class ProductResponse
     {
-        public string id { get; set; }
+        public Guid id { get; set; }
 
         public string? name { get; set; }
 

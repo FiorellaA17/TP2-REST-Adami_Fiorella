@@ -24,9 +24,10 @@ namespace Infraestructure.Query
 
         public async Task<Sale> GetSaleById(int id)
         {
-            return await _context.Sales
+            var sale = await _context.Sales
                 .Include(s => s.SaleProducts)
                 .FirstOrDefaultAsync(s => s.SaleId == id);
+            return sale;
         }
     }
 }

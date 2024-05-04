@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.ErrorHandler;
+using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 
@@ -22,8 +23,7 @@ namespace Application.UseCase
         {
             if (request.products == null || !request.products.Any())
             {
-                //_logger.LogError("GenerateSaleAsync called with no products.");
-                throw new ArgumentException("No products provided.");
+                throw new NoProductsProvidedException();
             }
 
             var sale = new Sale
@@ -38,19 +38,12 @@ namespace Application.UseCase
 
             foreach (var productRequest in request.products)
             {
-                // Intentar convertir el string ProductId a un Guid
-                if (!Guid.TryParse(productRequest.productId, out Guid productId))
-                {
-                    // Aquí puedes registrar un error o manejar la situación según la necesidad
-                    //_logger.LogError("Invalid GUID for product ID: {ProductId}", productRequest.ProductId);
-                    continue; // Saltar esta iteración si el GUID no es válido
-                }
-                var product = await _productQuery.GetProductById(productId);
+                var product = await _productQuery.GetProductById(productRequest.productId);
                 if (product != null)
                 {
                     decimal discountedPrice = product.Price * (1 - product.Discount / 100.0m);
                     subtotal += product.Price * productRequest.quantity;
-                    totalDiscount += (product.Price - discountedPrice) * productRequest.quantity;
+                    totalDiscount += Math.Round((product.Price - discountedPrice) * productRequest.quantity, 2);
 
                     sale.SaleProducts.Add(new SaleProduct
                     {
@@ -60,12 +53,21 @@ namespace Application.UseCase
                         Discount = product.Discount
                     });
                 }
+                else
+                {
+                    throw new ProductNotFoundException(new[] { productRequest.productId});
+                }
             }
 
             sale.Subtotal = subtotal;
             sale.TotalDiscount = totalDiscount;
             sale.Taxes = 1.21m;
-            sale.TotalPay = (subtotal - totalDiscount) * sale.Taxes;
+            sale.TotalPay = Math.Round(((subtotal - totalDiscount) * sale.Taxes), 2);
+
+            if (sale.TotalPay != request.totalPayed)
+            {
+                throw new PaymentMismatchException(sale.TotalPay, request.totalPayed);
+            }
 
             await _saleCommand.AddSale(sale);
 
@@ -81,7 +83,7 @@ namespace Application.UseCase
                 products = sale.SaleProducts.Select(sp => new SaleProductResponse
                 {
                     id = sp.ShoppingCartId,
-                    productId = sp.Product.ToString(),
+                    productId = sp.Product,
                     quantity = sp.Quantity,
                     price = sp.Price,
                     discount = sp.Discount
@@ -94,11 +96,10 @@ namespace Application.UseCase
             var sale = await _saleQuery.GetSaleById(id);
             if (sale == null)
             {
-                //_logger.LogError("Sale with id {SaleId} not found", id);
-                return null;
+                throw new SaleNotFoundException(id);
             }
 
-            return await BuildSaleResponse(sale);
+            return BuildSaleResponse(sale);
         }
 
         public async Task<IEnumerable<SaleGetResponse>> GetSales(DateTime? from, DateTime? to)
@@ -113,7 +114,7 @@ namespace Application.UseCase
             });
         }
 
-        private async Task<SaleResponse> BuildSaleResponse(Sale sale)
+        private SaleResponse BuildSaleResponse(Sale sale)
         {
             return new SaleResponse
             {
@@ -127,7 +128,7 @@ namespace Application.UseCase
                 products = sale.SaleProducts.Select(sp => new SaleProductResponse
                 {
                     id = sp.ShoppingCartId,
-                    productId = sp.Product.ToString(),
+                    productId = sp.Product,
                     quantity = sp.Quantity,
                     price = sp.Price,
                     discount = sp.Discount

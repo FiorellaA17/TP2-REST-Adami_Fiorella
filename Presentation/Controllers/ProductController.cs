@@ -1,6 +1,7 @@
 ﻿using Application.ErrorHandler;
 using Application.Interfaces;
 using Application.Models;
+using Application.UseCase;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -30,28 +31,38 @@ namespace Presentation.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Devuelve un 400 con los detalles del error de validación
+                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
             }
-
             try
             {
                 var products = await _productService.GetFilteredProducts(filter);
                 return Ok(products); //200
             }
-            catch (Exception) // Captura excepciones generales
+
+            catch (CategoryDoesNotExistException ex)
             {
-                return StatusCode(500, "Internal server error "); // Devuelve un 500 en caso de error no manejado
+                return BadRequest(new ApiError(ex.Message)); //400
+            }
+            catch (Exception) 
+            {
+                return StatusCode(500, new ApiError("Error interno del servidor.")); // Devuelve un 500 en caso de error no manejado
             }
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "Crea un nuevo producto.",
+            Description = "Permite la creación de un nuevo producto en el sistema."
+        )]
+        [SwaggerResponse(201, Description = "Producto creado con éxito", Type = typeof(ProductResponse))]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
+        [SwaggerResponse(409, Description = "Conflicto, el producto ya existe.")]
+        [SwaggerResponse(500, Description = "Error interno del servidor")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
         {
-
             if (!ModelState.IsValid)
             {
-                var apiError = new ApiError("Solicitud incorrecta.");
-                return BadRequest(apiError);
+                 return BadRequest(new ApiError("Solicitud incorrecta.")); //400
             }
 
             try
@@ -59,133 +70,101 @@ namespace Presentation.Controllers
                 var productResponse = await _productService.CreateProduct(request);
                 return CreatedAtRoute(new { id = productResponse.id }, productResponse); // 201 Created
             }
-            catch (ProductAlreadyExistsException)
+
+            catch (ProductAlreadyExistsException ex)
             {
-                var apiError = new ApiError("Conflicto, el producto ya existe.");
-                return Conflict(apiError);
+                return Conflict(new ApiError(ex.Message)); //409
+            }
+            catch (CategoryDoesNotExistException ex)
+            {
+                return NotFound(new ApiError(ex.Message)); // 404
             }
             catch (Exception)
             {
-                return StatusCode(500, new ApiError("Error interno del servidor."));
+                return StatusCode(500, new ApiError("Error interno del servidor.")); //500
             }
 
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductDetails(string id)
+        [SwaggerOperation(
+            Summary = "Obtiene detalles de un producto específico.",
+            Description = "Recupera los detalles de un producto por su ID único."
+        )]
+        [SwaggerResponse(200, Description = "Éxito al recuperar los detalles del producto.", Type = typeof(ProductResponse))]
+        [SwaggerResponse(404, Description = "Producto no encontrado.")]
+        public async Task<IActionResult> GetProductDetails(Guid id)
         {
-            if (!Guid.TryParse(id, out Guid guidId))
+            try
             {
-                return BadRequest(new ApiError("Formato de Id inválido."));
+                var productDetails = await _productService.GetProductById(id);
+                return Ok(productDetails); //200
             }
 
-            var productDetails = await _productService.GetProductById(guidId);
-            if (productDetails == null)
+            catch(ProductNotFoundException ex)
             {
-                return NotFound(new ApiError("Producto no encontrado."));
+                return NotFound(new ApiError(ex.Message)); //404
             }
-
-            return Ok(productDetails);
+            
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(string id, ProductRequest request)
+        [SwaggerOperation(
+            Summary = "Actualiza un producto existente.",
+            Description = "Permite la actualización de los detalles de un producto específico."
+        )]
+        [SwaggerResponse(200, Description = "Producto actualizado con éxito.", Type = typeof(ProductResponse))]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
+        [SwaggerResponse(404, Description = "Producto no encontrado.")]
+        [SwaggerResponse(409, Description = "Conflicto al actualizar el producto.")]
+        public async Task<IActionResult> UpdateProduct(Guid id, ProductRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError("Solicitud incorrecta."));
-            }
-            if (!Guid.TryParse(id, out Guid guidId))
-            {
-                return BadRequest(new ApiError("Formato de Id inválido."));
-            }
-
-            var productDetails = await _productService.GetProductById(guidId);
-            if (productDetails == null)
-            {
-                return NotFound(new ApiError("Producto no encontrado."));
+                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
             }
 
             try
             {
-                var updatedProduct = await _productService.UpdateProduct(guidId, request);
-                return Ok(updatedProduct);
+                var updatedProduct = await _productService.UpdateProduct(id, request);
+                return Ok(updatedProduct); //200
+            }
+            catch (ProductNotFoundException ex)
+            {
+                return NotFound(new ApiError(ex.Message)); //404
             }
             catch (ProductAlreadyExistsException ex)
             {
-                return Conflict(new ApiError(ex.Message));
+                return Conflict(new ApiError(ex.Message)); //409
+            }
+            catch (CategoryDoesNotExistException ex)
+            {
+                return NotFound(new ApiError(ex.Message)); // 404
             }
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Elimina un producto específico.",
+            Description = "Permite la eliminación de un producto del sistema usando su ID."
+        )]
+        [SwaggerResponse(200, Description = "Producto eliminado con éxito.", Type = typeof(ProductResponse))]
+        [SwaggerResponse(404, Description = "Producto no encontrado.")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
             {
                 var response = await _productService.DeleteProduct(id);
-                return Ok(response);  // Return the response with 200 OK if the deletion is successful
+                return Ok(response);  //200
             }
             catch (ProductNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message));  // Return 404 Not Found if the product does not exist
+                return NotFound(new ApiError(ex.Message));  //404
             }
-            catch (CheckProductDeletionException ex)
+            catch (ProductHasSalesHistoryException ex)
             {
-                return BadRequest(new ApiError(ex.Message));  // Return 400 Bad Request if the product cannot be deleted due to existing sales
+                return Conflict(new ApiError(ex.Message));  // 409
             }
-            catch (Exception ex)
-            {
-                // For general exceptions that are not handled above
-                return StatusCode(500, new ApiError("An internal error occurred while attempting to delete the product. " + ex.Message));  // Return 500 Internal Server Error for any other exceptions
-            }
-            //try
-            //{
-            //    var response = await _productService.DeleteProduct(id);
-            //    return Ok(response);
-            //}
-            //catch (ProductNotFoundException ex)
-            //{
-            //    return NotFound(new ApiError(ex.Message));
-            //}
-            //catch (CheckProductDeletionException ex)
-            //{
-            //    return StatusCode(500, new ApiError(ex.Message));
-            //}
-            ////try
-            ////{
-            ////    var response = await _productService.DeleteProduct(id);
-            ////    return Ok(response);
-            ////}
-            ////catch (ProductNotFoundException ex)
-            ////{
-            ////    return NotFound(new ApiError(ex.Message));
-            ////}
-            ////catch (CheckProductDeletionException ex)
-            ////{
-            ////    return BadRequest(new ApiError(ex.Message));
-            ////}
-            ////catch (Exception ex)
-            ////{
-            ////    return StatusCode(500, new ApiError("Ocurrió un error interno al intentar eliminar el producto."));
-            ////}
-            //try
-            //{
-            //    var response = await _productService.DeleteProduct(id);
-            //    return Ok(response);  // Producto eliminado con éxito
-            //}
-            //catch (ProductNotFoundException ex)
-            //{
-            //    return NotFound(new ApiError($"Producto con el ID {id} no se encontró."));
-            //}
-            //catch (CheckProductDeletionException ex)
-            //{
-            //    return BadRequest(new ApiError($"No se puede eliminar el producto con ID {id} porque ha sido vendido."));
-            //}
-            //catch (Exception)
-            //{
-            //    // Manejar cualquier otra excepción no anticipada
-            //    return StatusCode(500, new ApiError("Ocurrió un error interno al intentar eliminar el producto."));
-            //}
         }
     }
 }
