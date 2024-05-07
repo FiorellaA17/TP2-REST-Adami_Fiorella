@@ -1,5 +1,4 @@
-﻿
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,7 +13,7 @@ namespace Application.Models
         public string? name { get; set; }
 
         [SwaggerParameter("Limita el número de productos devueltos.")]
-        [DefaultValue(0)]
+        [DefaultValue(int.MaxValue)]
         [Range(0, int.MaxValue)]
         public int limit { get; set; }
 

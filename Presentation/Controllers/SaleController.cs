@@ -23,25 +23,30 @@ namespace Presentation.Controllers
             Description = "Recupera un resumen de las ventas realizadas, con opción de filtrado por fecha."
         )]
         [SwaggerResponse(200, Description = "Éxito al recuperar las ventas.", Type = typeof(IEnumerable<SaleGetResponse>))]
-        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
-        [SwaggerResponse(500, Description = "Error interno del servidor")]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
         public async Task<IActionResult> GetSales([FromQuery] DateTime? from, [FromQuery] DateTime? to)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
+                var errors = ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
+
+                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
             }
 
-            try
+            if (from.HasValue && to.HasValue && from > to)
             {
-                var sales = await _saleService.GetSales(from, to);
-                return Ok(sales);  // 200
+                return BadRequest(new ApiError("La fecha inicial no puede ser mayor que la fecha final.")); //400
             }
 
-            catch (Exception)
-            {
-                return StatusCode(500, "Internal Server Error");  // 500
-            }
+            var sales = await _saleService.GetSales(from, to);
+             return Ok(sales);  // 200
         }
 
         [HttpPost]
@@ -50,13 +55,23 @@ namespace Presentation.Controllers
             Description = "Permite ingresar una nueva venta al sistema."
         )]
         [SwaggerResponse(201, Description = "Venta registrada con éxito.", Type = typeof(SaleResponse))]
-        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
-        [SwaggerResponse(500, Description = "Error interno del servidor")]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
+        [SwaggerResponse(404, Description = "Producto no encontrado.", Type = typeof(ApiError))]
+        [SwaggerResponse(409, Description = "Conflicto al registrar la venta.", Type = typeof(ApiError))]
         public async Task<IActionResult> CreateSale([FromBody] SaleRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
+                var errors = ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
+
+                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
             }
 
             try
@@ -73,10 +88,6 @@ namespace Presentation.Controllers
             {
                 return NotFound(new ApiError(ex.Message)); //404
             }
-            catch (Exception)
-            {
-                return StatusCode(500, "An internal error occurred.");
-            }
         }  
 
         [HttpGet("{id}")]
@@ -85,8 +96,7 @@ namespace Presentation.Controllers
             Description = "Recupera los detalles de una venta por su ID único."
         )]
         [SwaggerResponse(200, Description = "Éxito al recuperar los detalles de la venta.", Type = typeof(SaleResponse))]
-        [SwaggerResponse(404, Description = "Venta no encontrada.")]
-        [SwaggerResponse(500, Description = "Error interno del servidor")]
+        [SwaggerResponse(404, Description = "Venta no encontrada.", Type = typeof(ApiError))]
         public async Task<IActionResult> GetSaleById(int id)
         {
             try

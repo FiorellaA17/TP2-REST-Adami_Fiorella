@@ -1,18 +1,18 @@
 using Application.Interfaces;
+using Application.Models;
 using Application.UseCase;
 using Infraestructure.Command;
 using Infraestructure.Persistence;
 using Infraestructure.Query;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -21,6 +21,24 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
     });
     c.EnableAnnotations();
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        var errors = actionContext.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .SelectMany(x => x.Value.Errors)
+            .Select(x => x.ErrorMessage)
+            .ToArray();
+
+        var errorMessage = string.Join(" ", errors);
+
+        var errorResponse = new ApiError(errorMessage);
+
+        return new BadRequestObjectResult(errorResponse);
+    };
 });
 
 //Custom

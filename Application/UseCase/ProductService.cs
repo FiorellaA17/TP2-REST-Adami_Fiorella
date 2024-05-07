@@ -21,7 +21,6 @@ namespace Application.UseCase
 
         public async Task<IEnumerable<ProductGetResponse>> GetFilteredProducts(ProductFilter filter)
         {
-            // Verifica la existencia de todas las categorías
             var invalidCategories = new List<int>();
 
             if (filter.categories != null)
@@ -42,13 +41,11 @@ namespace Application.UseCase
 
             var query = _productQuery.GetListProducts();
 
-            // Aplica filtro por categoría si Categories no es nulo y tiene elementos.
             if (filter.categories != null && filter.categories.Any())
             {
                 query = query.Where(p => filter.categories.Contains(p.CategoryName.CategoryId));
             }
 
-            // Aplica filtro por nombre solo si se proporciona un nombre.
             if (!string.IsNullOrEmpty(filter.name))
             {
                 query = query.Where(p => p.Name.Contains(filter.name));
@@ -78,40 +75,24 @@ namespace Application.UseCase
                 throw new ProductAlreadyExistsException(request.name);
             }
 
-            //if (request.category != null)
-            //{
-            //    bool exists = await _categoryService.CategoryExist(request.category);
-            //    if (!exists)
-            //    {
-            //        throw new CategoryDoesNotExistException(request.category);
-            //    }
-            //}
             if(request.category != null)
             {
                 await _categoryService.EnsureCategoryExists(request.category);
             }
-
-            try
-            {    
-                var product = new Product
-                {
-                    ProductId = Guid.NewGuid(),
-                    Name = request.name,
-                    Description = request.description,
-                    Price = request.price,
-                    Category = request.category,
-                    Discount = request.discount,
-                    ImageUrl = request.imageUrl
-                };
-
-                await _productCommand.AddProduct(product);
-                return await BuildProductResponse(product);
-            }
-
-            catch (Exception ex)
+    
+            var product = new Product
             {
-                throw new ApplicationException($"Error creando el producto: {ex.Message}", ex);
-            }
+                ProductId = Guid.NewGuid(),
+                Name = request.name,
+                Description = request.description,
+                Price = request.price,
+                Category = request.category,
+                Discount = request.discount,
+                ImageUrl = request.imageUrl
+            };
+
+            await _productCommand.AddProduct(product);
+            return await BuildProductResponse(product);
         }
 
         public async Task<ProductResponse> DeleteProduct(Guid productId)
@@ -150,24 +131,11 @@ namespace Application.UseCase
                 throw new ProductNotFoundException(id);
             }
 
-            //if (_categoryService.GetCategoryById(request.discount) == null)
-            //{
-            //    throw new CategoryDoesNotExistException(request.category);
-            //}
-            ////if (request.category != null)
-            ////{
-            ////    bool exists = await _categoryService.CategoryExist(request.category);
-            ////    if (!exists)
-            ////    {
-            ////        throw new CategoryDoesNotExistException(request.category);
-            ////    }
-            ////}
-
             if (request.category != null)
             {
                 await _categoryService.EnsureCategoryExists(request.category);
             }
-            // Verifica si el nombre del producto ha cambiado y si el nuevo nombre ya existe.
+  
             if (product.Name != request.name && await _productQuery.ProductExistsByName(request.name))
             {
                 throw new ProductAlreadyExistsException(request.name);

@@ -95,7 +95,7 @@ namespace Infraestructure.Persistence
                 .IsRequired();
 
                 entity.Property(p => p.Description)
-                .HasMaxLength(255);
+                .HasMaxLength(int.MaxValue);
 
                 entity.Property(p => p.Price)
                 .HasColumnType("decimal( 15, 2)")

@@ -9,19 +9,18 @@ namespace Application.ErrorHandler
         }
     }
     public class ProductNotFoundException : Exception
-    {
-        public ProductNotFoundException(Guid productId)
-            : base($"Producto con el ID {productId} no se encontró.")
-        {
-        }
-
+    { 
         public IEnumerable<Guid> ProductIds { get; private set; }
-
         public ProductNotFoundException(IEnumerable<Guid> productIds)
             : base($"Productos con IDs {string.Join(", ", productIds)} no se encontró.")
         {
             ProductIds = productIds;
         }
+        public ProductNotFoundException(Guid productId)
+            : base($"Producto con el ID {productId} no se encontró.")
+        {
+        }
+       
     }
     public class ProductHasSalesHistoryException : Exception
     {
@@ -32,18 +31,17 @@ namespace Application.ErrorHandler
     }
     public class CategoryDoesNotExistException : Exception
     {
-
-        public CategoryDoesNotExistException(int id)
-            : base($" No existe categoria con ID '{id}'.")
-        {
-        }
         public List<int>? MissingCategoryIds { get; private set; }
-
         public CategoryDoesNotExistException(List<int> ids)
             : base($"Las siguientes categorías no existen: {string.Join(", ", ids)}")
         {
             MissingCategoryIds = ids;
         }
+
+        public CategoryDoesNotExistException(int id)
+            : base($" No existe categoria con ID '{id}'.")
+        {
+        }     
     }
 
     public class PaymentMismatchException : Exception
@@ -71,14 +69,6 @@ namespace Application.ErrorHandler
     {
         public SaleNotFoundException(int id)
             : base($"No se encontró ventas con el ID {id}.")
-        {
-        }
-    }
-
-    public class DiscountException : Exception
-    {
-        public DiscountException(int id)
-            : base($" El valor {id} no es válido. El descuento debe estar entre 0 y 100.")
         {
         }
     }

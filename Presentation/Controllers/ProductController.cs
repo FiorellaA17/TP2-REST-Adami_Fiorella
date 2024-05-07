@@ -1,7 +1,6 @@
 ﻿using Application.ErrorHandler;
 using Application.Interfaces;
 using Application.Models;
-using Application.UseCase;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -25,14 +24,23 @@ namespace Presentation.Controllers
             Description = "Recuperar una lista de productos disponibles, con opciones de filtrado."
         )]
         [SwaggerResponse(200, Description = "Éxito al recuperar los productos.", Type = typeof(IEnumerable<ProductGetResponse>))]
-        [SwaggerResponse(400, Description = "Parámetros de solicitud inválidos")]
-        [SwaggerResponse(500, Description = "Error interno del servidor")]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta", Type = typeof(ApiError))]
         public async Task<IActionResult> GetProducts([FromQuery] ProductFilter filter)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
+                var errors = ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
+
+                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
             }
+
             try
             {
                 var products = await _productService.GetFilteredProducts(filter);
@@ -41,11 +49,7 @@ namespace Presentation.Controllers
 
             catch (CategoryDoesNotExistException ex)
             {
-                return BadRequest(new ApiError(ex.Message)); //400
-            }
-            catch (Exception) 
-            {
-                return StatusCode(500, new ApiError("Error interno del servidor.")); // Devuelve un 500 en caso de error no manejado
+                return NotFound(new ApiError(ex.Message)); //404
             }
         }
 
@@ -55,14 +59,22 @@ namespace Presentation.Controllers
             Description = "Permite la creación de un nuevo producto en el sistema."
         )]
         [SwaggerResponse(201, Description = "Producto creado con éxito", Type = typeof(ProductResponse))]
-        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
-        [SwaggerResponse(409, Description = "Conflicto, el producto ya existe.")]
-        [SwaggerResponse(500, Description = "Error interno del servidor")]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
+        [SwaggerResponse(409, Description = "Conflicto, el producto ya existe.", Type = typeof(ApiError))]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
         {
             if (!ModelState.IsValid)
             {
-                 return BadRequest(new ApiError("Solicitud incorrecta.")); //400
+                var errors = ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
+
+                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta."));
             }
 
             try
@@ -79,11 +91,6 @@ namespace Presentation.Controllers
             {
                 return NotFound(new ApiError(ex.Message)); // 404
             }
-            catch (Exception)
-            {
-                return StatusCode(500, new ApiError("Error interno del servidor.")); //500
-            }
-
         }
 
         [HttpGet("{id}")]
@@ -92,7 +99,7 @@ namespace Presentation.Controllers
             Description = "Recupera los detalles de un producto por su ID único."
         )]
         [SwaggerResponse(200, Description = "Éxito al recuperar los detalles del producto.", Type = typeof(ProductResponse))]
-        [SwaggerResponse(404, Description = "Producto no encontrado.")]
+        [SwaggerResponse(404, Description = "Producto no encontrado.", Type = typeof(ApiError))]
         public async Task<IActionResult> GetProductDetails(Guid id)
         {
             try
@@ -104,8 +111,7 @@ namespace Presentation.Controllers
             catch(ProductNotFoundException ex)
             {
                 return NotFound(new ApiError(ex.Message)); //404
-            }
-            
+            } 
         }
 
         [HttpPut("{id}")]
@@ -114,14 +120,23 @@ namespace Presentation.Controllers
             Description = "Permite la actualización de los detalles de un producto específico."
         )]
         [SwaggerResponse(200, Description = "Producto actualizado con éxito.", Type = typeof(ProductResponse))]
-        [SwaggerResponse(400, Description = "Solicitud incorrecta.")]
-        [SwaggerResponse(404, Description = "Producto no encontrado.")]
-        [SwaggerResponse(409, Description = "Conflicto al actualizar el producto.")]
+        [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
+        [SwaggerResponse(404, Description = "Producto no encontrado.", Type = typeof(ApiError))]
+        [SwaggerResponse(409, Description = "Conflicto al actualizar el producto.", Type = typeof(ApiError))]
         public async Task<IActionResult> UpdateProduct(Guid id, ProductRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ApiError("Solicitud incorrecta.")); //400
+                var errors = ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
+
+                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta."));
             }
 
             try
@@ -149,7 +164,7 @@ namespace Presentation.Controllers
             Description = "Permite la eliminación de un producto del sistema usando su ID."
         )]
         [SwaggerResponse(200, Description = "Producto eliminado con éxito.", Type = typeof(ProductResponse))]
-        [SwaggerResponse(404, Description = "Producto no encontrado.")]
+        [SwaggerResponse(404, Description = "Producto no encontrado.", Type = typeof(ApiError))]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try

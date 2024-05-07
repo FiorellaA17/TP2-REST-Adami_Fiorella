@@ -71,24 +71,7 @@ namespace Application.UseCase
 
             await _saleCommand.AddSale(sale);
 
-            return new SaleResponse
-            {
-                id = sale.SaleId,
-                totalPay = sale.TotalPay,
-                totalQuantity = sale.SaleProducts.Sum(p => p.Quantity),
-                subtotal = sale.Subtotal,
-                totalDiscount = sale.TotalDiscount,
-                taxes = sale.Taxes,
-                date = sale.Date,
-                products = sale.SaleProducts.Select(sp => new SaleProductResponse
-                {
-                    id = sp.ShoppingCartId,
-                    productId = sp.Product,
-                    quantity = sp.Quantity,
-                    price = sp.Price,
-                    discount = sp.Discount
-                }).ToList()
-            };
+            return BuildSaleResponse(sale);
         }
 
         public async Task<SaleResponse> GetSaleById(int id)
@@ -105,13 +88,18 @@ namespace Application.UseCase
         public async Task<IEnumerable<SaleGetResponse>> GetSales(DateTime? from, DateTime? to)
         {
             var sales = await _saleQuery.GetSalesFromTo(from, to);
-            return sales.Select(s => new SaleGetResponse
+            return sales.Select(s => BuildSaleGetResponse(s));
+        }
+
+        private SaleGetResponse BuildSaleGetResponse(Sale sale)
+        {
+            return new SaleGetResponse
             {
-                id = s.SaleId,
-                totalPay = s.TotalPay,
-                totalQuantity = s.SaleProducts.Sum(sp => sp.Quantity),
-                date = s.Date
-            });
+                id = sale.SaleId,
+                totalPay = sale.TotalPay,
+                totalQuantity = sale.SaleProducts.Sum(sp => sp.Quantity),
+                date = sale.Date
+            };
         }
 
         private SaleResponse BuildSaleResponse(Sale sale)

@@ -21,12 +21,8 @@ namespace Infraestructure.Command
 
         public async Task DeleteProduct(Product product)
         {
-            var delete = await _context.Products.FindAsync(product.ProductId);
-            if (delete != null)
-            {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-            }
+             _context.Products.Remove(product);
+             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateProduct(Product product)

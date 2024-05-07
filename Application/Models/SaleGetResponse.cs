@@ -5,7 +5,7 @@ namespace Application.Models
     {
         public int id { get; set; }
         public decimal totalPay { get; set; }
-        public decimal totalQuantity { get; set; }
+        public int totalQuantity { get; set; }
         public DateTime date { get; set; }
     }
 }
