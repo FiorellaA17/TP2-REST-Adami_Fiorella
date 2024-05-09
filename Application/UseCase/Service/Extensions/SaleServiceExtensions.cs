@@ -18,7 +18,7 @@ namespace Application.UseCase.Service.Extensions
         {
             if (sale.TotalPay != request.totalPayed)
             {
-                errors.Add($"El total calculado ({sale.TotalPay}) no coincide con el total pagado ({request.totalPayed}).");
+                errors.Add($"El total calculado no coincide con el total pagado ({request.totalPayed}).");
             }
         }
 
