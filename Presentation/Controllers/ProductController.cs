@@ -46,13 +46,14 @@ namespace Presentation.Controllers
                 return CreatedAtRoute(new { id = productResponse.id }, productResponse);
             }
 
-            catch (ProductAlreadyExistsException ex)
-            {
-                return Conflict(new ApiError(ex.Message));
-            }
             catch (BadRequestException ex)
             {
                 return BadRequest(new ApiError(ex.Message));
+            }
+
+            catch (ProductAlreadyExistsException ex)
+            {
+                return Conflict(new ApiError(ex.Message));
             }
         }
 
@@ -88,24 +89,27 @@ namespace Presentation.Controllers
         [SwaggerResponse(409, Description = "Conflicto al actualizar el producto.", Type = typeof(ApiError))]
         public async Task<IActionResult> UpdateProduct(Guid id, ProductRequest request)
         {
-
             try
             {
                 var updatedProduct = await _productService.UpdateProduct(id, request);
                 return Ok(updatedProduct);
             }
-            catch (ProductNotFoundException ex)
-            {
-                return NotFound(new ApiError(ex.Message));
-            }
-            catch (ProductAlreadyExistsException ex)
-            {
-                return Conflict(new ApiError(ex.Message));
-            }
+
             catch (BadRequestException ex)
             {
                 return BadRequest(new ApiError(ex.Message));
             }
+
+            catch (ProductNotFoundException ex)
+            {
+                return NotFound(new ApiError(ex.Message));
+            }
+
+            catch (ProductAlreadyExistsException ex)
+            {
+                return Conflict(new ApiError(ex.Message));
+            }
+           
         }
 
         [HttpDelete("{id}")]
@@ -122,10 +126,12 @@ namespace Presentation.Controllers
                 var response = await _productService.DeleteProduct(id);
                 return Ok(response);
             }
+
             catch (ProductNotFoundException ex)
             {
                 return NotFound(new ApiError(ex.Message));
             }
+
             catch (ProductHasSalesHistoryException ex)
             {
                 return Conflict(new ApiError(ex.Message));

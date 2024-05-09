@@ -1,22 +1,23 @@
-﻿using Application.ErrorHandler;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
 
 
-namespace Application.UseCase
+namespace Application.UseCase.Service
 {
     public class SaleService : ISaleService
     {
         private readonly ISaleCommand _saleCommand;
         private readonly ISaleQuery _saleQuery;
         private readonly IProductQuery _productQuery;
+        private readonly ISaleServiceExtensions _saleServicesExtensions;
 
-        public SaleService(ISaleCommand saleCommand, ISaleQuery saleQuery, IProductQuery productQuery)
+        public SaleService(ISaleCommand saleCommand, ISaleQuery saleQuery, IProductQuery productQuery, ISaleServiceExtensions saleServices)
         {
             _saleCommand = saleCommand;
             _saleQuery = saleQuery;
             _productQuery = productQuery;
+            _saleServicesExtensions = saleServices;
         }
 
         public async Task<SaleResponse> GenerateSale(SaleRequest request)
@@ -31,15 +32,8 @@ namespace Application.UseCase
 
             await CalculateSale(request, sale, errors);
 
-            if (sale.TotalPay != request.totalPayed)
-            {
-                errors.Add($"El total calculado ({sale.TotalPay}) no coincide con el total pagado ({request.totalPayed}).");
-            }
-
-            if (errors.Any())
-            {
-                throw new BadRequestException(string.Join(" ", errors));
-            }
+            _saleServicesExtensions.ValidatePaymentAmountsMatch(request, sale, errors);
+            _saleServicesExtensions.ListErrors(errors);
 
             await _saleCommand.AddSale(sale);
 
@@ -53,13 +47,10 @@ namespace Application.UseCase
 
             foreach (var productRequest in request.products)
             {
-                if (productRequest.quantity <= 0)
-                {
-                    errors.Add($"La cantidad para el producto con ID {productRequest.productId} debe ser mayor a cero.");
-                    continue;
-                }
+                _saleServicesExtensions.ValidateProductQuantity(productRequest, errors);
 
                 var product = await _productQuery.GetProductById(productRequest.productId);
+                
                 if (product != null)
                 {
                     decimal discountedPrice = product.Price * (1 - product.Discount / 100.0m);
@@ -76,23 +67,19 @@ namespace Application.UseCase
                 }
                 else
                 {
-                    errors.Add($"Producto con ID {productRequest.productId} no encontrado.");
+                    _saleServicesExtensions.ProductNotFound(productRequest.productId, errors);
                 }
             }
 
             sale.Subtotal = subtotal;
             sale.TotalDiscount = totalDiscount;
             sale.Taxes = 1.21m;
-            sale.TotalPay = Math.Round(((subtotal - totalDiscount) * sale.Taxes), 2);
+            sale.TotalPay = Math.Round((subtotal - totalDiscount) * sale.Taxes, 2);
         }
 
         public async Task<SaleResponse> GetSaleById(int id)
         {
-            var sale = await _saleQuery.GetSaleById(id);
-            if (sale == null)
-            {
-                throw new SaleNotFoundException(id);
-            }
+            var sale = await _saleServicesExtensions.ValidateSaleExist(id);
 
             return BuildSaleResponse(sale);
         }

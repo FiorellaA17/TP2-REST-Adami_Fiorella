@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Application.Models;
-using Application.UseCase;
+using Application.UseCase.Service;
+using Application.UseCase.Service.Extensions;
 using Infraestructure.Command;
 using Infraestructure.Persistence;
 using Infraestructure.Query;
@@ -51,6 +52,8 @@ builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 builder.Services.AddScoped<ISaleQuery, SaleQuery>();
 builder.Services.AddScoped<ISaleCommand, SaleCommand>();
+builder.Services.AddScoped<IProductServiceExtensions, ProductServiceExtensions>();
+builder.Services.AddScoped<ISaleServiceExtensions, SaleServiceExtensions>();
 
 
 

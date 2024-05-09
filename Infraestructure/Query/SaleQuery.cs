@@ -18,7 +18,7 @@ namespace Infraestructure.Query
         {
             return await _context.Sales
                         .Include(s => s.SaleProducts)
-                        .Where(s => (!from.HasValue || s.Date >= from) && (!to.HasValue || s.Date < to))
+                        .Where(s => (!from.HasValue || s.Date >= from) && (!to.HasValue || s.Date <= to))
                         .ToListAsync();
         }
 

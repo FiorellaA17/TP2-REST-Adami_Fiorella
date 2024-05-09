@@ -1,9 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
-using System.Data;
 
-namespace Application.UseCase
+namespace Application.UseCase.Service
 {
     public class CategoryService : ICategoryService
     {
@@ -26,13 +25,13 @@ namespace Application.UseCase
 
         public async Task<ProductCategory> GetProductCategory(int categoryId)
         {
-           var category = await _categoryQuery.GetCategoryById(categoryId);
-           var productCategory = new ProductCategory
-           {
+            var category = await _categoryQuery.GetCategoryById(categoryId);
+            var productCategory = new ProductCategory
+            {
                 id = category.CategoryId,
                 name = category.Name
-           };
-           return productCategory;  
+            };
+            return productCategory;
         }
     }
 }
