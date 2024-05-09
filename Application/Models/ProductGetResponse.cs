@@ -1,4 +1,5 @@
 ﻿
+
 namespace Application.Models
 {
     public class ProductGetResponse

@@ -1,6 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models
 {
@@ -13,13 +12,11 @@ namespace Application.Models
         public string? name { get; set; }
 
         [SwaggerParameter("Limita el número de productos devueltos.")]
-        [DefaultValue(int.MaxValue)]
-        [Range(0, int.MaxValue)]
+        [DefaultValue(0)]
         public int limit { get; set; }
 
         [SwaggerParameter("Número de productos a omitir antes de empezar a devolver los resultados.")]
         [DefaultValue(0)]
-        [Range(0, int.MaxValue)]
         public int offset { get; set; }
     }
 }

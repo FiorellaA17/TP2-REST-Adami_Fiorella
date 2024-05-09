@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20240421190423_init")]
+    [Migration("20240507200522_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -106,8 +106,8 @@ namespace Infraestructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
@@ -134,7 +134,7 @@ namespace Infraestructure.Migrations
                     b.HasData(
                         new
                         {
-                            ProductId = new Guid("5236db35-a078-4341-b732-2ae8a591c83a"),
+                            ProductId = new Guid("d5ab1397-8b12-4e48-ab69-dd46df8e3916"),
                             Category = 1,
                             Description = "308L Rt29k577js8 No Frost Ix Inv",
                             Discount = 20,
@@ -144,7 +144,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("5ff62fca-e66e-432d-9988-052c93e55f01"),
+                            ProductId = new Guid("e93ea063-956e-4950-a2a7-7cdd8370b78f"),
                             Category = 1,
                             Description = "LAvarropas automático WM-85VVC5S6P Inverter vivace 8.5 kg silver",
                             Discount = 10,
@@ -154,7 +154,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("018407da-8e54-4a14-8ba6-8d7124f43e55"),
+                            ProductId = new Guid("37db3c18-d4c9-46dc-9220-35c8e75e35e1"),
                             Category = 1,
                             Description = "Tostadora atma eléctrica toat-39dn",
                             Discount = 0,
@@ -164,7 +164,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e3b6b6de-4226-4983-9005-002aef62d832"),
+                            ProductId = new Guid("dc723fa3-f573-4373-ac2d-fb5068cf300a"),
                             Category = 1,
                             Description = "Batidora atma planetaria bp-at21rp roja",
                             Discount = 0,
@@ -174,7 +174,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("58a3c08d-cc63-465d-ba04-32da45208ce4"),
+                            ProductId = new Guid("eef25c7a-27fd-4741-8396-fcd2d9f96bf0"),
                             Category = 2,
                             Description = "Smart Tv 50 Pulgadas 4K Ultra Hd 50Pud7406/77 - PHILIPS",
                             Discount = 5,
@@ -184,7 +184,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("bc9eae98-a596-4cb7-a533-4f2e1209a523"),
+                            ProductId = new Guid("5705d26d-a0aa-46ba-9cc8-26db6062a578"),
                             Category = 2,
                             Description = "PS5 SLIM Standard con lector CD/DVD 1TB + 1 Joystick Regalo",
                             Discount = 20,
@@ -194,7 +194,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("cde96a03-fe14-46bc-b979-5f4fba14cfe1"),
+                            ProductId = new Guid("cd8c6422-9773-4a1d-9f80-dc7f7108f16d"),
                             Category = 2,
                             Description = "Proyector Gadnic Surr 5500 Lúmenes Con Filtro HEPA HDMI x 2 USB x 2",
                             Discount = 0,
@@ -204,7 +204,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("1056235e-f252-4f61-9119-378ae07b9179"),
+                            ProductId = new Guid("d9cc96bc-c0b3-4662-9b7a-e1350f9329e6"),
                             Category = 2,
                             Description = "Drone Gadnic Con Camara Dual 4K",
                             Discount = 0,
@@ -214,7 +214,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("534a9b96-d48f-478b-a0af-fd3d5c565675"),
+                            ProductId = new Guid("847ddf9e-edad-48ef-b301-b36a8837c8cf"),
                             Category = 3,
                             Description = "Reebok zapatillas mujer - Glide mujer ch. -Dk grey-green",
                             Discount = 5,
@@ -224,7 +224,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("3a7c79c1-fec8-4f89-a00d-7a3e6b5e4f13"),
+                            ProductId = new Guid("db875506-8544-47f7-b362-a01d272e2243"),
                             Category = 3,
                             Description = "Mochila De Viaje Travel Tech Grande Amplia Compartimientos",
                             Discount = 0,
@@ -234,7 +234,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("38f40930-b6b8-4379-821b-b22e58ce7c33"),
+                            ProductId = new Guid("711a840a-ce5a-47c2-9388-4bf507dcdb98"),
                             Category = 3,
                             Description = "Bolso Amayra Fit Cómodo Gimnasio Deportivo",
                             Discount = 0,
@@ -244,7 +244,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("d931f8df-480f-4c60-9b81-e896909abcd1"),
+                            ProductId = new Guid("4db7bf99-ded2-430d-957e-b036c2cd5d89"),
                             Category = 3,
                             Description = "Modelo de anteojos de sol para mujer XOLD de la marca RUSTY.",
                             Discount = 15,
@@ -254,7 +254,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("0c35d554-8fe1-4ce9-8aad-0f447396302a"),
+                            ProductId = new Guid("186bdb57-0273-42c6-8bc2-1d8e6e10e1a3"),
                             Category = 4,
                             Description = "Lampara Colgante Led L2020 Dorado Moderno Deco Luz Desing",
                             Discount = 0,
@@ -264,7 +264,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("67c44c82-26d2-45e4-a4ad-cfdc11219b24"),
+                            ProductId = new Guid("1fe0e417-7a02-4b43-9e9f-34a13a32ea24"),
                             Category = 4,
                             Description = "",
                             Discount = 0,
@@ -274,7 +274,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("cfca429a-497b-4a26-b6fa-fdedbc0bcb60"),
+                            ProductId = new Guid("2aeb3f24-4096-4629-9c45-34ee6b8e743f"),
                             Category = 4,
                             Description = "La almohada de Piero Cervical está hecha de espuma, mejorando la postura del cuello y hombros. Medida: 65 x 35 cm.",
                             Discount = 0,
@@ -284,7 +284,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b350de05-8c6e-4e3c-b14a-3b7e877bb48e"),
+                            ProductId = new Guid("0cc7fc87-36f9-42bb-9855-db85a9527c59"),
                             Category = 4,
                             Description = "Espejo Nam de fibras naturales. Importado de Vietnam Diámetro: 60cm Espejo Diámetro: 19cm",
                             Discount = 10,
@@ -294,7 +294,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ea3647bd-ace1-4081-b950-0aa67752f047"),
+                            ProductId = new Guid("1a6d0ffc-ba29-48cd-8197-52ea555da5cd"),
                             Category = 5,
                             Description = "Una fragancia cautivadora nacida de la fusióninesperada entre el dulzor de notas afrutadas, la exclusiva rosatecnológica de Mugler y un elegante collar amaderado.",
                             Discount = 25,
@@ -304,7 +304,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("e6e5672d-4c89-4680-a09d-cc95db9c830f"),
+                            ProductId = new Guid("7135a466-2efd-4c58-ad8e-7b607ecac5a3"),
                             Category = 5,
                             Description = "La máscara de pestañas Lash Sensational Sky High de larga duración brinda un volumen completo y una longitud ilimitada.",
                             Discount = 0,
@@ -314,7 +314,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b6ad4474-7b9d-4e96-8d80-cf81cad20503"),
+                            ProductId = new Guid("17a27c35-587f-47f3-9903-d43725566f79"),
                             Category = 5,
                             Description = "Perfume para un hombre que vive en el presente, moldeado por la energía de la modernidad. Imprevisible, sorprende con su originalidad.",
                             Discount = 0,
@@ -324,7 +324,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("c5c266f1-00c9-470d-9961-1a19b409433d"),
+                            ProductId = new Guid("c16e9685-0cc9-49a8-849f-34cdb93006c6"),
                             Category = 5,
                             Description = "UV defender protector solar facil fuido FPS50+ 40g - claro.UV Defender Fluido es resiste al agua y al sudor, con textura fluida.",
                             Discount = 15,
@@ -334,7 +334,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("4611ee33-47d0-4a3d-8ecf-6685bed65b98"),
+                            ProductId = new Guid("6ec34474-eda8-432f-b99b-950a8ab69444"),
                             Category = 6,
                             Description = "Bicicleta Mountain Bike X 1.0 Rodado 29 Talle 20 Negro - NORDIC",
                             Discount = 0,
@@ -344,7 +344,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("c3f20009-bc25-4259-ba46-a3b5493d657a"),
+                            ProductId = new Guid("aad39775-f1c4-47c0-86b2-4c8adabd8b02"),
                             Category = 6,
                             Description = "Soga Saltar Crossfit/fitness Ranbak 737 Azul - RANBAK",
                             Discount = 0,
@@ -354,7 +354,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("cf9a3a8b-a7b8-4078-95a5-fcd3409c0912"),
+                            ProductId = new Guid("ed7df535-73b7-44b2-9553-2cd87b459881"),
                             Category = 6,
                             Description = "Rueda Doble Para Abdominales Ranbak 730 - RANBAK",
                             Discount = 0,
@@ -364,7 +364,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("8ffbfe6f-a443-4b95-818d-a0fc55bbdfb9"),
+                            ProductId = new Guid("d049db6b-ffcf-4ff7-8eed-990bc19e11c2"),
                             Category = 6,
                             Description = "Bote Inflable Explorer Pro 100 22699/0 - INTEX",
                             Discount = 10,
@@ -374,7 +374,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("7f72271e-d722-491a-9552-a93db2458d53"),
+                            ProductId = new Guid("2094421c-595f-43d0-b7b3-6423e1628018"),
                             Category = 7,
                             Description = "Dragon Ball Figura 10cm Articulado Flash Super Saiyan Broly",
                             Discount = 0,
@@ -384,7 +384,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("1e5ea14f-7967-4d6b-968b-595af8e6a5b9"),
+                            ProductId = new Guid("ccb66f89-a3bb-475f-a8b0-24de4d650fa0"),
                             Category = 7,
                             Description = "Legends of Akedo Powerstorm Battle Giants combina 2 figuras de acción de gigantes de batalla.",
                             Discount = 0,
@@ -394,7 +394,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("b1f9e349-0425-4be6-9b9e-557cb5ccbd0c"),
+                            ProductId = new Guid("b76e9bb5-0bed-4c00-861e-5c27a419ac28"),
                             Category = 7,
                             Description = "Hasbro Gaming Simon Juego de memoria electrónica portátil con luces y sonidos para niños de 8 años en adelante",
                             Discount = 0,
@@ -404,7 +404,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ef3ac19a-f1ee-4c6e-87de-91ae3bd05427"),
+                            ProductId = new Guid("a0175162-22ef-4718-b8db-5e13b0c32966"),
                             Category = 7,
                             Description = "Bloques Magneticos Grandes Varias Formas y colores 42 Piezas MG23",
                             Discount = 15,
@@ -414,7 +414,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("2f6e62e6-a543-44ed-ba06-2ac6c85a6b3f"),
+                            ProductId = new Guid("6641151d-6d69-4c69-ad6c-7481309ca2a8"),
                             Category = 8,
                             Description = "Ferrero Rocher – Chocolate Bombón – 8 Unidades",
                             Discount = 0,
@@ -424,7 +424,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("156984a9-42c6-4a0e-8bd5-021147e07f58"),
+                            ProductId = new Guid("d74bfd37-7552-4e69-8df4-df771c966a0a"),
                             Category = 8,
                             Description = "ACEITE ORGANICO DE OLIVA 500CC MAELCA",
                             Discount = 10,
@@ -434,7 +434,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("00abc863-b6b2-4bcf-bfae-f8500bc10761"),
+                            ProductId = new Guid("b9ad0df5-af10-467f-a86a-ef509affecee"),
                             Category = 8,
                             Description = "Yogurt de coco sabor arandanos 170 g quimya. Apto veganos",
                             Discount = 0,
@@ -444,7 +444,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("5f255ebf-0ce1-498f-a71a-407cc16a81db"),
+                            ProductId = new Guid("3f009d16-9690-40c6-8853-2823d0f66237"),
                             Category = 8,
                             Description = "Jugo de limón con jengible orgánico 500 cc Las brisas. Apto veganos",
                             Discount = 0,
@@ -454,7 +454,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("50cb3c07-06e7-4b6a-afec-1e3ab1ad21e1"),
+                            ProductId = new Guid("d11bc099-419d-4499-8a32-a7598322eea0"),
                             Category = 9,
                             Description = "Faber castell lapices de colores super soft x 24 escritura artística.",
                             Discount = 0,
@@ -464,7 +464,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("bf4dbdcc-6f45-4094-a722-63fe05a795a1"),
+                            ProductId = new Guid("5b13da66-b602-4012-a001-d77a79f7494a"),
                             Category = 9,
                             Description = "Mooving agenda 14 x 20 Harry Potter Diaria - Espiralada",
                             Discount = 0,
@@ -474,7 +474,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("8f639169-4766-41a2-9b16-09ac0f8d58f7"),
+                            ProductId = new Guid("2728192d-a8d1-4b08-b61e-3599efe217f5"),
                             Category = 9,
                             Description = "Casio calculadora científica a bateria FX-82ms",
                             Discount = 20,
@@ -484,7 +484,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("59777daa-0ac4-4b21-a5f8-2635f3f3887a"),
+                            ProductId = new Guid("47dc66f0-0db6-4fe4-9c12-adcac5414f54"),
                             Category = 9,
                             Description = "Sifap tempera sólida x 6 pastel arte",
                             Discount = 0,
@@ -494,7 +494,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("12f2fab3-6215-4c43-b401-7c605c93ceea"),
+                            ProductId = new Guid("60b80057-efbb-4c9a-8a9a-00784e542ab2"),
                             Category = 10,
                             Description = "Planta de exterior",
                             Discount = 0,
@@ -504,7 +504,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("89dac5a1-02c1-4e8d-b88c-6680c34cb1d9"),
+                            ProductId = new Guid("681b7574-0afd-4db9-a02a-bdbe364dd6f7"),
                             Category = 10,
                             Description = "Cordyline terminalis rubra",
                             Discount = 0,
@@ -514,7 +514,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("00fdcda3-1fb5-40d3-b7df-a633a38bf2bb"),
+                            ProductId = new Guid("aebe2bd8-c7c5-4be9-b704-3357f8af6f52"),
                             Category = 10,
                             Description = "Maceta de barro Clásica - Nº8",
                             Discount = 0,
@@ -524,7 +524,7 @@ namespace Infraestructure.Migrations
                         },
                         new
                         {
-                            ProductId = new Guid("ef947405-0abe-4bfa-b1af-1d7e0359b037"),
+                            ProductId = new Guid("3fdf7770-5cde-44ed-a3aa-1d2680008427"),
                             Category = 10,
                             Description = "Desmalezadora Gamma Naftera 44Cc G1835ar - GAMMA",
                             Discount = 15,

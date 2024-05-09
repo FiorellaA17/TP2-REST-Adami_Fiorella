@@ -14,10 +14,10 @@ namespace Infraestructure.Query
             _context = context;
         }
 
-        public async Task<bool> CategoryExist(int categoryId)
-        {           
-            return await _context.Categories.AnyAsync(c => c.CategoryId == categoryId);
-        }
+        //public async Task<bool> CategoryExist(int categoryId)
+        //{           
+        //    return await _context.Categories.AnyAsync(c => c.CategoryId == categoryId);
+        //}
 
         public async Task<Category> GetCategoryById(int categoryId)
         {

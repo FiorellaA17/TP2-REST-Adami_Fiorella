@@ -24,33 +24,10 @@ namespace Presentation.Controllers
             Description = "Recuperar una lista de productos disponibles, con opciones de filtrado."
         )]
         [SwaggerResponse(200, Description = "Éxito al recuperar los productos.", Type = typeof(IEnumerable<ProductGetResponse>))]
-        [SwaggerResponse(400, Description = "Solicitud incorrecta", Type = typeof(ApiError))]
         public async Task<IActionResult> GetProducts([FromQuery] ProductFilter filter)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                .Where(e => e.Value.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
-
-                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
-            }
-
-            try
-            {
                 var products = await _productService.GetFilteredProducts(filter);
-                return Ok(products); //200
-            }
-
-            catch (CategoryDoesNotExistException ex)
-            {
-                return NotFound(new ApiError(ex.Message)); //404
-            }
+                return Ok(products);
         }
 
         [HttpPost]
@@ -63,33 +40,19 @@ namespace Presentation.Controllers
         [SwaggerResponse(409, Description = "Conflicto, el producto ya existe.", Type = typeof(ApiError))]
         public async Task<IActionResult> CreateProduct([FromBody] ProductRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                .Where(e => e.Value.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
-
-                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta."));
-            }
-
             try
             {
                 var productResponse = await _productService.CreateProduct(request);
-                return CreatedAtRoute(new { id = productResponse.id }, productResponse); // 201 Created
+                return CreatedAtRoute(new { id = productResponse.id }, productResponse);
             }
 
             catch (ProductAlreadyExistsException ex)
             {
-                return Conflict(new ApiError(ex.Message)); //409
+                return Conflict(new ApiError(ex.Message));
             }
-            catch (CategoryDoesNotExistException ex)
+            catch (BadRequestException ex)
             {
-                return NotFound(new ApiError(ex.Message)); // 404
+                return BadRequest(new ApiError(ex.Message));
             }
         }
 
@@ -105,12 +68,12 @@ namespace Presentation.Controllers
             try
             {
                 var productDetails = await _productService.GetProductById(id);
-                return Ok(productDetails); //200
+                return Ok(productDetails);
             }
 
             catch(ProductNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message)); //404
+                return NotFound(new ApiError(ex.Message));
             } 
         }
 
@@ -125,36 +88,23 @@ namespace Presentation.Controllers
         [SwaggerResponse(409, Description = "Conflicto al actualizar el producto.", Type = typeof(ApiError))]
         public async Task<IActionResult> UpdateProduct(Guid id, ProductRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                .Where(e => e.Value.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
-
-                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta."));
-            }
 
             try
             {
                 var updatedProduct = await _productService.UpdateProduct(id, request);
-                return Ok(updatedProduct); //200
+                return Ok(updatedProduct);
             }
             catch (ProductNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message)); //404
+                return NotFound(new ApiError(ex.Message));
             }
             catch (ProductAlreadyExistsException ex)
             {
-                return Conflict(new ApiError(ex.Message)); //409
+                return Conflict(new ApiError(ex.Message));
             }
-            catch (CategoryDoesNotExistException ex)
+            catch (BadRequestException ex)
             {
-                return NotFound(new ApiError(ex.Message)); // 404
+                return BadRequest(new ApiError(ex.Message));
             }
         }
 
@@ -170,15 +120,15 @@ namespace Presentation.Controllers
             try
             {
                 var response = await _productService.DeleteProduct(id);
-                return Ok(response);  //200
+                return Ok(response);
             }
             catch (ProductNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message));  //404
+                return NotFound(new ApiError(ex.Message));
             }
             catch (ProductHasSalesHistoryException ex)
             {
-                return Conflict(new ApiError(ex.Message));  // 409
+                return Conflict(new ApiError(ex.Message));
             }
         }
     }

@@ -21,23 +21,44 @@ namespace Application.UseCase
 
         public async Task<SaleResponse> GenerateSale(SaleRequest request)
         {
-            if (request.products == null || !request.products.Any())
-            {
-                throw new NoProductsProvidedException();
-            }
-
             var sale = new Sale
             {
                 Date = DateTime.Now,
                 SaleProducts = new List<SaleProduct>(),
-                TotalPay = request.totalPayed 
             };
 
+            List<string> errors = new List<string>();
+
+            await CalculateSale(request, sale, errors);
+
+            if (sale.TotalPay != request.totalPayed)
+            {
+                errors.Add($"El total calculado ({sale.TotalPay}) no coincide con el total pagado ({request.totalPayed}).");
+            }
+
+            if (errors.Any())
+            {
+                throw new BadRequestException(string.Join(" ", errors));
+            }
+
+            await _saleCommand.AddSale(sale);
+
+            return BuildSaleResponse(sale);
+        }
+
+        public async Task CalculateSale(SaleRequest request, Sale sale, List<string> errors)
+        {
             decimal subtotal = 0;
             decimal totalDiscount = 0;
 
             foreach (var productRequest in request.products)
             {
+                if (productRequest.quantity <= 0)
+                {
+                    errors.Add($"La cantidad para el producto con ID {productRequest.productId} debe ser mayor a cero.");
+                    continue;
+                }
+
                 var product = await _productQuery.GetProductById(productRequest.productId);
                 if (product != null)
                 {
@@ -55,7 +76,7 @@ namespace Application.UseCase
                 }
                 else
                 {
-                    throw new ProductNotFoundException(new[] { productRequest.productId});
+                    errors.Add($"Producto con ID {productRequest.productId} no encontrado.");
                 }
             }
 
@@ -63,15 +84,6 @@ namespace Application.UseCase
             sale.TotalDiscount = totalDiscount;
             sale.Taxes = 1.21m;
             sale.TotalPay = Math.Round(((subtotal - totalDiscount) * sale.Taxes), 2);
-
-            if (sale.TotalPay != request.totalPayed)
-            {
-                throw new PaymentMismatchException(sale.TotalPay, request.totalPayed);
-            }
-
-            await _saleCommand.AddSale(sale);
-
-            return BuildSaleResponse(sale);
         }
 
         public async Task<SaleResponse> GetSaleById(int id)

@@ -26,27 +26,13 @@ namespace Presentation.Controllers
         [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
         public async Task<IActionResult> GetSales([FromQuery] DateTime? from, [FromQuery] DateTime? to)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                .Where(e => e.Value.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
-
-                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
-            }
-
             if (from.HasValue && to.HasValue && from > to)
             {
-                return BadRequest(new ApiError("La fecha inicial no puede ser mayor que la fecha final.")); //400
+                return BadRequest(new ApiError("La fecha inicial no puede ser mayor que la fecha final."));
             }
 
             var sales = await _saleService.GetSales(from, to);
-             return Ok(sales);  // 200
+             return Ok(sales);
         }
 
         [HttpPost]
@@ -56,38 +42,19 @@ namespace Presentation.Controllers
         )]
         [SwaggerResponse(201, Description = "Venta registrada con éxito.", Type = typeof(SaleResponse))]
         [SwaggerResponse(400, Description = "Solicitud incorrecta.", Type = typeof(ApiError))]
-        [SwaggerResponse(404, Description = "Producto no encontrado.", Type = typeof(ApiError))]
-        [SwaggerResponse(409, Description = "Conflicto al registrar la venta.", Type = typeof(ApiError))]
         public async Task<IActionResult> CreateSale([FromBody] SaleRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                .Where(e => e.Value.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                );
-
-                var errorMessage = errors.SelectMany(err => err.Value).FirstOrDefault();
-
-                return BadRequest(new ApiError(errorMessage ?? "Solicitud incorrecta.")); //400
-            }
-
             try
             {
                 var saleResponse = await _saleService.GenerateSale(request);
-                return CreatedAtRoute(new { id = saleResponse.id }, saleResponse); //201
+                return CreatedAtRoute(new { id = saleResponse.id }, saleResponse);
             }
 
-            catch(PaymentMismatchException ex)
+            catch(BadRequestException ex)
             {
-                return Conflict(new ApiError(ex.Message));//409
+                return BadRequest(new ApiError(ex.Message));
             }
-            catch (ProductNotFoundException ex)
-            {
-                return NotFound(new ApiError(ex.Message)); //404
-            }
+
         }  
 
         [HttpGet("{id}")]
@@ -102,12 +69,12 @@ namespace Presentation.Controllers
             try
             {
                 var sale = await _saleService.GetSaleById(id);
-                return Ok(sale); //200
+                return Ok(sale);
             }
             
             catch (SaleNotFoundException ex)
             {
-                return NotFound(new ApiError(ex.Message)); //404
+                return NotFound(new ApiError(ex.Message));
             }
         }
     }

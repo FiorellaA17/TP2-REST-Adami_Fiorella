@@ -16,11 +16,6 @@ namespace Infraestructure.Query
 
         public async Task<IEnumerable<Sale>> GetSalesFromTo(DateTime? from, DateTime? to)
         {
-            if (to.HasValue)
-            {
-                to = to.Value.AddDays(1).Date; // Mueve 'to' al comienzo del siguiente día
-            }
-
             return await _context.Sales
                         .Include(s => s.SaleProducts)
                         .Where(s => (!from.HasValue || s.Date >= from) && (!to.HasValue || s.Date < to))
