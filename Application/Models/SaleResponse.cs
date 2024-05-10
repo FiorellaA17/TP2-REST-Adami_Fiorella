@@ -11,6 +11,6 @@ namespace Application.Models
         public decimal totalDiscount { get; set; }
         public decimal taxes { get; set; }
         public DateTime date { get; set; }
-        public List<SaleProductResponse> products { get; set; } = new List<SaleProductResponse>();
+        public List<SaleProductResponse>? products { get; set; } = new List<SaleProductResponse>();
     }
 }
