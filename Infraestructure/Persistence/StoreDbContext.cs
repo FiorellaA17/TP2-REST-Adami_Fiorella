@@ -133,7 +133,7 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Heladera samsung",
+                Name = "Heladera samsung 308L",
                 Description = "308L Rt29k577js8 No Frost Ix Inv",
                 Price = 589999,
                 Category = 1,
@@ -144,34 +144,34 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Lg lavarropas automático",
+                Name = "Lg lavarropas automático 8.5 kg",
                 Description = "LAvarropas automático WM-85VVC5S6P Inverter vivace 8.5 kg silver",
                 Price = 1285713,
                 Category = 1,
-                Discount = 10,
-                ImageUrl = "https://76338a6a.flyingcdn.com/44686-large_default/lg-lavarropas-autwm-85vvc5s6p-inverter-vivace-85kg-silver.jpg"
+                Discount = 30,
+                ImageUrl = "https://www.perozzi.com.ar/44686-large_default/lg-lavarropas-autwm-85vvc5s6p-inverter-vivace-85kg-silver.jpg"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Tostadora",
-                Description = "Tostadora atma eléctrica toat-39dn",
+                Name = "Tostadora atma eléctrica toat-39dn",
+                Description = "La tostadora Disney tiene un diseño moderno, liviano de color rojo. Hacé las tostadas mas originales con la cara de Mickey Mouse y disfrutá de tus desayunos y meriendas de la manera más divertida. Brinda 7 niveles de tostado y es fácil de limpiar ya que viene con bandeja de migas.",
                 Price = 39999,
                 Category = 1,
-                Discount = 0,
-                ImageUrl = "https://76338a6a.flyingcdn.com/39415-large_default/atma-tostadora-electrica-toat-39dn.jpg"
+                Discount = 15,
+                ImageUrl = "https://www.perozzi.com.ar/39420-large_default/atma-tostadora-electrica-toat-39dn.jpg"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Batidora planetaria",
-                Description = "Batidora atma planetaria bp-at21rp roja",
+                Name = "Ultracomb batidora planetario Gris BB 2106",
+                Description = "Descripción: 8 niveles de potencia-movimiento planetario para amasado,mezcla y batido-\r\nMarca: Ultracomb\r\nOrigen: Argentina\r\nFunciones: bol acero inoxidable\r\nMateriales: N/A\r\nGarantia de Fabrica (meses): 6\r\nCapacidad: 5 Litros\r\nPotencia (Watts): 800 w\r\naccesorios: 3 accesorios/cabezal rebatible",
                 Price = 589999,
                 Category = 1,
-                Discount = 0,
-                ImageUrl = "https://76338a6a.flyingcdn.com/42304-large_default/atma-batidora-planetaria-bp-at21rp-roja.jpg"
+                Discount = 20,
+                ImageUrl = "https://www.perozzi.com.ar/16649-large_default/ultracomb-batidora-planetaria-gris-bb-2106-37801109.jpg"
             },
 
             new Product
@@ -181,7 +181,7 @@ namespace Infraestructure.Persistence
                 Description = "Smart Tv 50 Pulgadas 4K Ultra Hd 50Pud7406/77 - PHILIPS",
                 Price = 594099,
                 Category = 2,
-                Discount = 5,
+                Discount = 25,
                 ImageUrl = "https://www.megatone.net/Images/Articulos/zoom2x/253/TEL5006PHI.jpg"
             },
 
@@ -199,51 +199,51 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Proyector",
+                Name = "Proyector Gadnic Surr 5500",
                 Description = "Proyector Gadnic Surr 5500 Lúmenes Con Filtro HEPA HDMI x 2 USB x 2",
                 Price = 283179,
                 Category = 2,
-                Discount = 0,
+                Discount = 20,
                 ImageUrl = "https://images.fravega.com/f300/5b68c007ab23568b5379ac7708999b9a.jpg.webp"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Drone",
+                Name = "Drone Gadnic 4k",
                 Description = "Drone Gadnic Con Camara Dual 4K",
                 Price = 594099,
                 Category = 2,
-                Discount = 0,
+                Discount = 30,
                 ImageUrl = "https://images.fravega.com/f300/60354c20fe3a7afd1b747439ee22d522.jpg.webp"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Reebok zapatillas mujer",
+                Name = "Zapatillas reebok glide mujer",
                 Description = "Reebok zapatillas mujer - Glide mujer ch. -Dk grey-green",
                 Price = 99999,
                 Category = 3,
-                Discount = 5,
+                Discount = 25,
                 ImageUrl = "https://megasports.vteximg.com.br/arquivos/ids/224093-1000-1000/41104788055_0.jpg?v=638267497579500000"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Mochila de viaje",
-                Description = "Mochila De Viaje Travel Tech Grande Amplia Compartimientos",
+                Name = "Mochila de viaje travel tech",
+                Description = "Mochila Plegable Travel Tech Viajes Práctica Liviana Cecchini es una empresa marroquinera con presencia en el mercado desde el año 1991. Creada en Rosario hoy cuenta con puntos de ventas en distintas partes del país como San Lorenzo, Villa Gobernador Gálvez, Venado Tuerto, Paraná, Santa Fe, Neuquén y CABA. Características: Confección: Material 100% poliéster Dimensiones de la mochila plegada: alto 18 cm x ancho 20 cm x profundidad 2 cm Dimensiones de la mochila abierta: alto 42 cm x ancho 29cm x profundidad 12 cm",
                 Price = 104500,
                 Category = 3,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://images.fravega.com/f300/eab6e93f47c2a4a5156964361abd6aa0.jpg.webp"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Bolso deportivo",
+                Name = "Bolso deportivo Amayra",
                 Description = "Bolso Amayra Fit Cómodo Gimnasio Deportivo",
                 Price = 30800,
                 Category = 3,
@@ -254,7 +254,7 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Anteojos de sol",
+                Name = "Anteojos de sol XOLD Rusty ",
                 Description = "Modelo de anteojos de sol para mujer XOLD de la marca RUSTY.",
                 Price = 89600,
                 Category = 3,
@@ -265,11 +265,11 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Lampara colgante",
+                Name = "Lampara colgante L2020",
                 Description = "Lampara Colgante Led L2020 Dorado Moderno Deco Luz Desing",
                 Price = 99999,
                 Category = 4,
-                Discount = 0,
+                Discount = 20,
                 ImageUrl = "https://http2.mlstatic.com/D_Q_NP_660955-MLA74649779983_022024-B.jpg"
             },
 
@@ -280,7 +280,7 @@ namespace Infraestructure.Persistence
                 Description = "",
                 Price = 22590,
                 Category = 4,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://images.fravega.com/f300/9b2bee9b6b6518b60eb262be396c44fb.jpg.webp"
             },
 
@@ -291,7 +291,7 @@ namespace Infraestructure.Persistence
                 Description = "La almohada de Piero Cervical está hecha de espuma, mejorando la postura del cuello y hombros. Medida: 65 x 35 cm.",
                 Price = 14999,
                 Category = 4,
-                Discount = 0,
+                Discount = 15,
                 ImageUrl = "https://images.fravega.com/f300/30df4745cef1263ea72604f24c3a3929.jpg.webp"
             },
 
@@ -309,7 +309,7 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Angel nova EDP 100ml",
+                Name = "Perfume Angel nova EDP 100ml",
                 Description = "Una fragancia cautivadora nacida de la fusióninesperada entre el dulzor de notas afrutadas, la exclusiva rosatecnológica de Mugler y un elegante collar amaderado.",
                 Price = 286000,
                 Category = 5,
@@ -324,25 +324,25 @@ namespace Infraestructure.Persistence
                 Description = "La máscara de pestañas Lash Sensational Sky High de larga duración brinda un volumen completo y una longitud ilimitada.",
                 Price = 22659,
                 Category = 5,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://d3cdlnm7te7ky2.cloudfront.net/media/mf_webp/jpg/media/catalog/product/cache/d41ed5f2410977369e7cfa45777ef8e0/1/4/142943-a-lash-sensational-sky-high-washable-very-black_1.webp"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Stronge with you EDT 100ml",
+                Name = "Perfume Stronge with you EDT 100ml",
                 Description = "Perfume para un hombre que vive en el presente, moldeado por la energía de la modernidad. Imprevisible, sorprende con su originalidad.",
                 Price = 174900,
                 Category = 5,
-                Discount = 0,
+                Discount = 25,
                 ImageUrl = "https://d3cdlnm7te7ky2.cloudfront.net/media/mf_webp/jpg/media/catalog/product/cache/mtools/300x300/catalog/product//1/1/119078-a-stronger-with-you-edt-100ml_2.webp"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Protector solar facial",
+                Name = "Protector solar facial UV defender",
                 Description = "UV defender protector solar facil fuido FPS50+ 40g - claro.UV Defender Fluido es resiste al agua y al sudor, con textura fluida.",
                 Price = 16253,
                 Category = 5,
@@ -353,18 +353,18 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Bicicleta mountain bike",
+                Name = "Bicicleta mountain bike rodado 29",
                 Description = "Bicicleta Mountain Bike X 1.0 Rodado 29 Talle 20 Negro - NORDIC",
                 Price = 589999,
                 Category = 6,
-                Discount = 0,
+                Discount = 25,
                 ImageUrl = "https://www.megatone.net/Images/Articulos/zoom2x/104/BIC2922NRD.jpg"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Soga saltar crossfit",
+                Name = "Soga saltar crossfit Ranbak",
                 Description = "Soga Saltar Crossfit/fitness Ranbak 737 Azul - RANBAK",
                 Price = 7300,
                 Category = 6,
@@ -375,18 +375,18 @@ namespace Infraestructure.Persistence
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Rueda doble para abdominales",
+                Name = "Rueda doble para abdominales Ranbak",
                 Description = "Rueda Doble Para Abdominales Ranbak 730 - RANBAK",
                 Price = 15799,
                 Category = 6,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://www.megatone.net/images/Articulos/zoom2x/304/01/MKT0060RAN.jpg"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Bote inflable",
+                Name = "Bote inflable intex",
                 Description = "Bote Inflable Explorer Pro 100 22699/0 - INTEX",
                 Price = 42999,
                 Category = 6,
@@ -401,7 +401,7 @@ namespace Infraestructure.Persistence
                 Description = "Dragon Ball Figura 10cm Articulado Flash Super Saiyan Broly",
                 Price = 25000,
                 Category = 7,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://wabro.vteximg.com.br/arquivos/ids/187554-320-320/3.jpg?v=638030021553570000"
             },
 
@@ -412,7 +412,7 @@ namespace Infraestructure.Persistence
                 Description = "Legends of Akedo Powerstorm Battle Giants combina 2 figuras de acción de gigantes de batalla.",
                 Price = 45000,
                 Category = 7,
-                Discount = 0,
+                Discount = 15,
                 ImageUrl = "https://m.media-amazon.com/images/I/51EXTNFIrYL._AC_.jpg"
             },
 
@@ -423,7 +423,7 @@ namespace Infraestructure.Persistence
                 Description = "Hasbro Gaming Simon Juego de memoria electrónica portátil con luces y sonidos para niños de 8 años en adelante",
                 Price = 30820,
                 Category = 7,
-                Discount = 0,
+                Discount = 10,
                 ImageUrl = "https://m.media-amazon.com/images/I/81P7iHZ+1lL._AC_UL320_.jpg"
             },
 
@@ -434,7 +434,7 @@ namespace Infraestructure.Persistence
                 Description = "Bloques Magneticos Grandes Varias Formas y colores 42 Piezas MG23",
                 Price = 50399,
                 Category = 7,
-                Discount = 15,
+                Discount = 20,
                 ImageUrl = "https://images.fravega.com/f300/59412558bc3aad5f4a7e9bcfea3dc30c.jpg.webp"
             },
 
@@ -456,7 +456,7 @@ namespace Infraestructure.Persistence
                 Description = "ACEITE ORGANICO DE OLIVA 500CC MAELCA",
                 Price = 12350,
                 Category = 8,
-                Discount = 10,
+                Discount = 15,
                 ImageUrl = "https://biomarket.com.ar/wp-content/uploads/2019/09/7798241870102.jpg"
             },
 
@@ -476,7 +476,7 @@ namespace Infraestructure.Persistence
                 ProductId = Guid.NewGuid(),
                 Name = "Jugo de limón con jengibre",
                 Description = "Jugo de limón con jengible orgánico 500 cc Las brisas. Apto veganos",
-                Price = 37930,
+                Price = 3793,
                 Category = 8,
                 Discount = 0,
                 ImageUrl = "https://biomarket.com.ar/wp-content/uploads/2023/01/BRIS54_1.jpg"
@@ -500,7 +500,7 @@ namespace Infraestructure.Persistence
                 Description = "Mooving agenda 14 x 20 Harry Potter Diaria - Espiralada",
                 Price = 25500,
                 Category = 9,
-                Discount = 0,
+                Discount = 15,
                 ImageUrl = "https://www.heavenimagenes.com/heavencommerce/11de0e5d-73b3-4c32-910b-8483d00a7205/images/v2/MOOVING/20080_medium.jpg"
             },
 
@@ -530,33 +530,33 @@ namespace Infraestructure.Persistence
             {
                 ProductId = Guid.NewGuid(),
                 Name = "Alegria del hogar",
-                Description = "Planta de exterior",
+                Description = "La Impatiens walleriana, comúnmente conocida como ‘Alegría del hogar’, es una planta que se distingue por su belleza ornamental y su fácil cultivo.",
                 Price = 550,
                 Category = 10,
                 Discount = 0,
-                ImageUrl = "https://www.viverodeluca.com.ar/1096-home_default/alegria-del-hogar.jpg"
+                ImageUrl = "https://th.bing.com/th/id/OIP.ESv3sAmz6E3HL_WFTlqcfQHaHa?rs=1&pid=ImgDetMain"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Dracena rubra",
-                Description = "Cordyline terminalis rubra",
-                Price = 7900,
+                Name = "Cactus Asteria Variegata",
+                Description = "Astrophytum asterias es un cactus sin espinas que puebla las regiones del sur de Estados Unidos y el norte de México. De tamaño pequeño, es considerado como una especie en peligro de extinción.",
+                Price = 30000,
                 Category = 10,
-                Discount = 0,
-                ImageUrl = "https://www.viverodeluca.com.ar/3334-large_default/cordyline-rubra-dracena-rubra-dracena-rubra.jpg"
+                Discount = 10,
+                ImageUrl = "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTG8NlAr6uybZn0eXG-xCGU5wpnAB97GpN7z4m7cJF0LYCirk_Li9eSfzBJ1ci8yHlBI5URFnlg84H57G9vPsmAlekPMBTJwoPP1iwXOcuo&usqp=CAE"
             },
 
             new Product
             {
                 ProductId = Guid.NewGuid(),
-                Name = "Maceta de barro",
-                Description = "Maceta de barro Clásica - Nº8",
-                Price = 940,
+                Name = "Coco terracota – Maceta grande – Modelo 03",
+                Description = "Esta maceta de barro rojo tipo coco está diseñada como maceta de suelo. Cuenta con orificio para drenaje del agua. También puede ser utilizada como macetero o cubremaceta, albergando en su interior otras macetas de menores dimensiones. Se ofrece en un diámetro de 23 cm,",
+                Price = 6000,
                 Category = 10,
                 Discount = 0,
-                ImageUrl = "https://www.viverodeluca.com.ar/1273-large_default/maceta-de-barro-cl%C3%A1sica.jpg"
+                ImageUrl = "https://www.ceramicaramblena.com/wp-content/uploads/2021/11/coco-terracota-maceta-grande-modelo-03-01-510x382.jpg"
             },
 
             new Product

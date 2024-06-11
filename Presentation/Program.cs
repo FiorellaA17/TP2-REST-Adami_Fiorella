@@ -43,7 +43,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 //Custom
-builder.Services.AddSingleton<StoreDbContext>();
+builder.Services.AddScoped<StoreDbContext>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductQuery, ProductQuery>();
 builder.Services.AddScoped<IProductCommand, ProductCommand>();
@@ -55,7 +55,15 @@ builder.Services.AddScoped<ISaleCommand, SaleCommand>();
 builder.Services.AddScoped<IProductServiceExtensions, ProductServiceExtensions>();
 builder.Services.AddScoped<ISaleServiceExtensions, SaleServiceExtensions>();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("nuevaPolitica", app =>
+    {
+        app.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -67,6 +75,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("nuevaPolitica");
 
 app.UseAuthorization();
 
